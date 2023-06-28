@@ -1,6 +1,6 @@
 .about-me {
   max-width: 1140px;
-  margin: 110px 70px 110px;
+  margin: 110px 70px 125px;
 }
 
 .about-me__student {
@@ -108,6 +108,9 @@
 }
 
 @media screen and (max-width: 980px) {
+  .about-me {
+    margin: 90px 50px 90px;
+  }
   .about-me__title {
     font-size: 40px;
     line-height: 40px;
@@ -128,16 +131,22 @@
   }
 
   .about-me__link {
-    margin: 87px 0 0 0;
+    margin: 105px 0 0 0;
   }
 
   .about-me__foto {
-    width: 225px;
+    width: 255px;
     height: 307px;
   }
 
   .portfolio_title {
     margin: 90px 0 0 0;
+  }
+
+  .portfolio__name {
+    font-size: 28px;
+    line-height: 50px;
+    letter-spacing: -1.12px;
   }
 }
 
@@ -160,6 +169,7 @@
 
   .about-me__title {
     font-size: 30px;
+    line-height: 33px;
     letter-spacing: -1.2px;
     margin: 40px 0 0 0;
   }
@@ -177,7 +187,7 @@
   }
 
   .about-me__link {
-    margin: 40px 0 0 0;
+    margin: 56px 0 0 0;
   }
 
   .portfolio_title {
@@ -202,11 +212,12 @@
 
 @media screen and (max-width: 400px) {
   .about-me {
-    margin: 70px 14px 70px;
+    margin: 70px 14px 50px;
    }
 
-   .portfolio__name {
-    line-height: 20px;
+  .portfolio__links {
+    margin: 20px 0 0 0;
   }
 
+ 
 }

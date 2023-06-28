@@ -8,7 +8,7 @@
   font-weight: 400;
   font-size: 50px;
   line-height: 58px;
-  margin: 90px auto 0;
+  margin: 80px auto 0;
   letter-spacing: -2px;
   text-align: center;
 }
@@ -58,6 +58,8 @@
 
   .techs__subtitle {
     font-size: 12px;
+    line-height: 18px;
+    letter-spacing: -0.48px;
     margin: 22px auto 0;
   }
   
@@ -94,6 +96,7 @@
 
   .techs__title {
     font-size: 30px;
+    line-height: 35px;
     margin: 60px auto 0;
     letter-spacing: -1.2px;
   }
@@ -107,7 +110,13 @@
   }
 
   .techs__names {
+    margin-top: 50px;
     grid-template-columns: repeat(2, minmax(85px, 1fr));
-    width: 200px;
+    width: 180px;
+  }
+
+  .techs__name {
+    width: 84px;
+    height: 57px;
   }
 }

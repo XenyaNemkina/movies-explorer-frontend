@@ -102,6 +102,10 @@
   }
   
   @media screen and (max-width: 340px) {
+    .promo__subtitle {
+      margin-bottom: 80px;
+    }
+
     .promo__img {
       width: 210px;
       height: 206px;
