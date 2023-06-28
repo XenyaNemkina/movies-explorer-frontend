@@ -1,0 +1,113 @@
+.techs {
+  background-color: #F5F5F5;
+  padding: 90px 70px 100px;
+}
+
+.techs__title {
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 58px;
+  margin: 90px auto 0;
+  letter-spacing: -2px;
+  text-align: center;
+}
+
+.techs__subtitle {
+  width: 460px;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 26px auto 0;
+  letter-spacing: -0.56px;
+  text-align: center;
+}
+
+.techs__names {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(85px, 1fr));
+  grid-template-rows: auto;
+  width: 700px;
+  gap: 10px 10px;
+  margin: 100px auto 0;
+  padding: 0;
+}
+
+.techs__name {
+  display: flex;
+  align-items: center;
+  width: 90px;
+  height: 60px;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.56px;
+  justify-content: center;
+  background-color: #E8E8E8;
+  border-radius: 10px;
+  margin: 0 5px 0;
+}
+
+@media screen and (max-width: 810px) {
+  .techs {
+    background-color: #F5F5F5;
+    padding: 90px 50px 90px;
+  }
+
+  .techs__subtitle {
+    font-size: 12px;
+    margin: 22px auto 0;
+  }
+  
+  .techs__names {
+    margin: 83px 0 0;
+    width: 400px;
+  }
+  
+  .techs__name {
+    font-size: 12px;
+    letter-spacing: -0.48px;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .techs {
+    padding: 90px 20px 90px;
+  }
+
+  .techs__names {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(85px, 1fr));
+    grid-template-rows: auto;
+    margin: 83px auto 0;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .techs {
+    background-color: #FFFFFF;
+    padding: 70px 14px 70px;
+  }
+
+  .techs__title {
+    font-size: 30px;
+    margin: 60px auto 0;
+    letter-spacing: -1.2px;
+  }
+
+  .techs__subtitle {
+    width: 285px;
+    font-size: 11px;
+    line-height: 16px;
+    margin: 24px auto 0;
+    letter-spacing: -0.44px;
+  }
+
+  .techs__names {
+    grid-template-columns: repeat(2, minmax(85px, 1fr));
+    width: 200px;
+  }
+}
