@@ -1,0 +1,32 @@
+.header__link_signup {
+  color: #000;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-decoration: none;
+  margin-right: 30px;
+}
+
+.header__link_signin {
+  display: block;
+  color: #FFF;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 30px;
+  box-sizing: border-box;
+  text-decoration: none;
+  background-color: #000;
+  border-radius: 3px;
+  width: 76px;
+  height: 32px;
+  text-align: center;
+
+}
+
+.header__navbar {
+  display: flex;
+  align-items: center;
+}
+

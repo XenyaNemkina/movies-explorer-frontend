@@ -1,17 +1,19 @@
 import "./SearchForm.css";
-import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import find from "../../images/find.svg"
 
 function SearchForm() {
   return(
     <section className="searchform">
       <form className="searchform__form">
-        <input required className="searchform__input" placeholder="Фильм"></input> 
-        <button className="searchform__btn" type="submit"></button>
-        <span className="searchform__input_error"></span>
-        
+        <div className="searchform__bar">
+          <input required className="searchform__input" placeholder="Фильм"></input> 
+          <button className="searchform__btn" type="submit"></button>
+        </div>
+        <fieldset className="searchform__filter">
+          <input className="searchform__checkbox" type="checkbox"></input>
+          <h3 className="searchform__text">Короткометражки</h3>
+        </fieldset>
       </form>
-      <FilterCheckbox />
       <hr className="searchform__line" />
     </section>
   )

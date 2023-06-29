@@ -1,10 +1,18 @@
 import "./MoviesCardList.css";
+import { useEffect,useState } from 'react';
 import MoviesCard from "../MoviesCard/MoviesCard";
+import movies from "../../utils/movieData";
 
-/* const cardsElements = films.map((card) => {
+function MoviesCardList() {
+  const [films, setFilms] = useState([]);
+
+  useEffect(() => {
+    setFilms(movies);
+  },[])
+
+  const cardsElements = films.map((card) => {
     return (
     <MoviesCard 
-      handleDeleteCard={handleDeleteCard}
       key = {card.movieId}
       card = {card}
       country = {card.country}
@@ -21,14 +29,13 @@ import MoviesCard from "../MoviesCard/MoviesCard";
       nameEN = {card.nameEN} 
       like = {card.like}
     />)
-  }) */
-
-function MoviesCardList() {
+  })
   return(
     <section className="movieslist">
-       <div className="movieslist__items">
-        
-       </div>   
+       <ul className="movieslist__items">
+          {cardsElements}
+       </ul>   
+       <button className="movieslist__morebtn" type="button">Ещё</button>
     </section>
   )
 }
