@@ -22,14 +22,14 @@
 }
 
 .project__table-cell {
- max-width: 550px;
+  max-width: 550px;
 }
 
 .project__table-cell:first-child {
   margin-right: 40px;
- }
+}
 
-.project__table-heading { 
+.project__table-heading {
   font-family: "Inter", Arial, sans-serif;
   font-weight: 400;
   font-size: 20px;
@@ -55,7 +55,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc( 100% - 100px );
+  width: calc(100% - 100px);
 }
 
 .project__duration-dev:first-child {
@@ -77,12 +77,12 @@
   font-family: "Inter", Arial, sans-serif;
   color: #000;
   margin: 0;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   text-align: center;
 }
 
 .project__duration-quantity_black {
-  color: #FFF;
+  color: #fff;
   background-color: #000;
 }
 
@@ -92,7 +92,7 @@
   font-family: "Inter", Arial, sans-serif;
   font-weight: 500;
   line-height: 17px;
-  color: #A0A0A0;
+  color: #a0a0a0;
   margin: 14px 0 0 0;
 }
 
@@ -132,7 +132,7 @@
     padding-bottom: 28px;
   }
 
-  .project__table-heading { 
+  .project__table-heading {
     font-size: 18px;
     letter-spacing: -0.72px;
     margin-top: 60px;
@@ -151,7 +151,7 @@
   .project__duration-dev:first-child {
     width: 35vw;
   }
-  
+
   .project__duration-dev:last-child {
     width: 65vw;
   }

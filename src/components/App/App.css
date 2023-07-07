@@ -1,6 +1,14 @@
-.page{
+.page {
   background-color: white;
   min-height: 100vh;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  opacity: 0.8;
 }

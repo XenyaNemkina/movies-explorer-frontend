@@ -1,11 +1,11 @@
-.moviesCard {  
+.moviesCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 360px;
   height: 319px;
   border-radius: 6px;
-  background-color: #FDFDFD;
+  background-color: #fdfdfd;
   box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.08);
 }
 
@@ -31,7 +31,7 @@
   font-size: 13px;
   line-height: 18px;
   margin: 0;
-  color: #A0A0A0;
+  color: #a0a0a0;
 }
 
 .moviesCard__img {
@@ -39,18 +39,27 @@
   height: 200px;
 }
 
-.moviesCard__savebtn {
+.moviesCard__btn {
   width: 100px;
   height: 29px;
-  background-color: #F9F9F9;
+  background-image: url(../../images/save.png);
   border-radius: 30px;
-  font-family: "Inter", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 12px;
-  color: #000;
   border: none;
   margin: 18px 0;
+}
+
+.moviesCard__btn_saved {
+  background-image: url(../../images/savedbtn.png);
+}
+
+.moviesCard__btn_delete {
+  width: 100px;
+  height: 29px;
+  background-color: #f9f9f9;
+  border-radius: 30px;
+  border: none;
+  margin: 18px 0;
+  background-image: url(../../images/deletebtn.png);
 }
 
 @media screen and (max-width: 1162px) {
@@ -64,7 +73,7 @@
   .moviesCard {
     width: 300px;
     height: 271px;
-    }  
+  }
 
   .moviesCard__header {
     width: 272px;
@@ -78,9 +87,8 @@
   .moviesCard__duration {
     font-size: 10px;
   }
-  
-  .moviesCard__savebtn {
+
+  .moviesCard__btn {
     margin: 14px 0;
   }
 }
-

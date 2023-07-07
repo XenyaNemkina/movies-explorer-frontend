@@ -1,32 +1,44 @@
-.header__link_signup {
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 40px;
+}
+
+.navbar__movie {
+  text-decoration: none;
   color: #000;
   font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  margin-right: 16px;
+}
+
+.navbar__movie_active {
   font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-  text-decoration: none;
-  margin-right: 30px;
 }
 
-.header__link_signin {
-  display: block;
-  color: #FFF;
-  font-family: "Inter", Arial, sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 30px;
-  box-sizing: border-box;
-  text-decoration: none;
-  background-color: #000;
-  border-radius: 3px;
-  width: 76px;
-  height: 32px;
-  text-align: center;
-
+.navbar__burger {
+  display: none;
+  background-image: url(../../images/icon__burger.svg);
+  width: 44px;
+  height: 44px;
+  background-color: transparent;
+  border: none;
 }
 
-.header__navbar {
-  display: flex;
-  align-items: center;
-}
+@media screen and (max-width: 770px) {
+  .navbar__account {
+    display: none;
+  }
 
+  .navbar__movie {
+    display: none;
+  }
+
+  .navbar__burger {
+    display: block;
+  }
+}

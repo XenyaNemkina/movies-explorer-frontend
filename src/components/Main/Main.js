@@ -5,14 +5,14 @@ import Techs from "../Techs/Techs";
 import AboutMe from "../AboutMe/AboutMe";
 
 function Main() {
-  return(
+  return (
     <main className="content">
       <Promo />
       <Project />
       <Techs />
       <AboutMe />
     </main>
-  )
+  );
 }
 
 export default Main;

@@ -1,38 +1,25 @@
 import "./NavBar.css";
-import { Routes, Route, Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import Account from "../Account/Account.js";
 
-function NavBar() {
-  return(
-    <>
-    <Routes>
-      <Route exact path= { "/movies" } element={
-        <div className="header__navbar">
-          <Link to="/movies" className="header__link header__link_active">Фильмы</Link>
-          <Link to="/saved-movies" className="header__link">Сохранённые фильмы</Link>
-          <Link to="/profile" className="header__link">Аккаунт</Link>
-        </div>
-        }
-      />
-      <Route exact path= { "/saved-movies" } element={
-        <div className="header__navbar">
-          <Link to="/movies" className="header__link header__link_active">Фильмы</Link>
-          <Link to="/saved-movies" className="header__link">Сохранённые фильмы</Link>
-          <Link to="/profile" className="header__link">Аккаунт</Link>
-        </div>
-        }
-      />
-      <Route exact path="/" element={
-        <div className="header__navbar">
-        <Link to="/sign-up" className="header__link_signup">Регистрация</Link>
-        <Link to="/sign-in" className="header__link_signin">Войти</Link>
-        </div>
-        }
-      />
-    </Routes>
-    </>
+function NavBar({ onBurgerClick }) {
+  const location = useLocation();
+  const path = location.pathname;
 
-
-  )
+  return (
+    <nav className="navbar">
+      <div className="navbar__movies">
+        <NavLink className={`navbar__movie ${path === "/movies" && "navbar__movie_active"} link`} to="/movies">
+          Фильмы
+        </NavLink>
+        <NavLink className={`navbar__movie ${path === "/saved-movies" && "navbar__movie_active"} link`} to="/saved-movies">
+          Сохранённые фильмы
+        </NavLink>
+      </div>
+      <Account />
+      <button className="navbar__burger link" onClick={onBurgerClick}></button>
+    </nav>
+  );
 }
 
 export default NavBar;

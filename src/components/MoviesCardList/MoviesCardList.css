@@ -19,10 +19,10 @@
 }
 
 .movieslist__morebtn {
-  width: calc( 100% - 60px);
+  width: calc(100% - 60px);
   height: 36px;
   border-radius: 6px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   font-family: "Inter", Arial, sans-serif;
   font-weight: 500;
   font-size: 12px;
@@ -43,11 +43,11 @@
   .movieslist__items {
     grid-template-columns: repeat(1, minmax(360px, 1fr));
     gap: 16px;
-  }  
+  }
 }
 
 @media screen and (max-width: 500px) {
   .movieslist__morebtn {
-    width: calc( 100% - 28px );
+    width: calc(100% - 28px);
   }
 }

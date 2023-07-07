@@ -1,7 +1,7 @@
-import "./Techs.css"
+import "./Techs.css";
 
 function Techs() {
-  return(
+  return (
     <section className="techs">
       <h2 className="section__title">Технологии</h2>
       <h3 className="techs__title">7 технологий</h3>
@@ -16,7 +16,7 @@ function Techs() {
         <li className="techs__name">mongoDB</li>
       </ul>
     </section>
-  )
+  );
 }
 
 export default Techs;
