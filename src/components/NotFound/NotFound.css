@@ -7,6 +7,7 @@
 }
 
 .page-not-found__title {
+  min-height: 169px;
   text-align: center;
   font-size: 140px;
   font-weight: 400;
@@ -40,6 +41,7 @@
 
 @media screen and (max-width: 400px) {
   .page-not-found__title {
+    min-height: 97px;
     font-size: 80px;
     margin: 329px auto 0;
   }

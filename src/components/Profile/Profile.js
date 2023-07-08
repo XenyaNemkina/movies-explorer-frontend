@@ -39,7 +39,7 @@ function Profile({ onSubmit }) {
     <>
       <Header />
       <section className="profile">
-        <h2 className="profile__hello">Привет, </h2>
+        <h2 className="profile__hello">Привет, Виталий!</h2>
         <form className="profile__form" onSubmit={handleSubmit}>
           <div className="profile__content">
             <p className="profile__subtitle">Имя</p>

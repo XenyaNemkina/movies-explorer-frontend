@@ -39,26 +39,26 @@ function Login({ onSubmit }) {
   };
 
   return (
-    <section className="auth__container">
+    <section className="login__container">
       <Logo />
-      <h2 className="auth__title">Рады видеть!</h2>
-      <form className="auth__form" onSubmit={handleSubmitLogin}>
-        <div className="auth__content">
-          <p className="auth__subtitle">E-mail</p>
-          <input className="auth__field" type="email" name="email" autoComplete="off" value={formValue.email} onChange={handleEmailChange} required />
-          <span className={`auth__field_error ${emailError && "auth__field_error_active"}`}>{emailError}</span>
+      <h2 className="login__title">Рады видеть!</h2>
+      <form className="login__form" onSubmit={handleSubmitLogin}>
+        <div className="login__content">
+          <p className="login__subtitle">E-mail</p>
+          <input className="login__field" type="email" name="email" autoComplete="off" value={formValue.email} onChange={handleEmailChange} required />
+          <span className={`login__field_error ${emailError && "login__field_error_active"}`}>{emailError}</span>
         </div>
-        <div className="auth__content">
-          <p className="auth__subtitle">Пароль</p>
-          <input className="auth__field" type="password" name="password" value={formValue.password} onChange={handlePasswordChange} required />
-          <span className={`auth__field_error ${passwordError && "auth__field_error_active"}`}>{passwordError}</span>
+        <div className="login__content">
+          <p className="login__subtitle">Пароль</p>
+          <input className="login__field" type="password" name="password" value={formValue.password} onChange={handlePasswordChange} required />
+          <span className={`login__field_error ${passwordError && "login__field_error_active"}`}>{passwordError}</span>
         </div>
-        <button type="submit" className="auth__savebtn link" onSubmit={handleSubmitLogin}>
+        <button type="submit" className="login__savebtn link" onSubmit={handleSubmitLogin}>
           Войти
         </button>
-        <p className="auth__text">
+        <p className="login__text">
           Ещё не зарегистрированы?{" "}
-          <Link to="/signup" className="auth__text_link link">
+          <Link to="/signup" className="login__text_link link">
             Регистрация
           </Link>
         </p>

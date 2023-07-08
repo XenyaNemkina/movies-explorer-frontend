@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 40px;
+  margin-left: 44px;
 }
 
 .navbar__movie {
@@ -30,6 +30,10 @@
 }
 
 @media screen and (max-width: 770px) {
+  .navbar {
+    margin: 0;
+  }
+
   .navbar__account {
     display: none;
   }

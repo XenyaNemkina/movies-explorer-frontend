@@ -20,6 +20,7 @@
 
 .movieslist__morebtn {
   width: calc(100% - 60px);
+  max-width: 1140px;
   height: 36px;
   border-radius: 6px;
   background-color: #f9f9f9;
@@ -34,20 +35,24 @@
 
 @media screen and (max-width: 1162px) {
   .movieslist__items {
-    grid-template-columns: repeat(2, minmax(360px, 1fr));
-    gap: 24px 35px;
+    grid-template-columns: repeat(2, minmax(342px, 1fr));
+    gap: 35px 24px;
+    margin: 80px auto 10px;
+    justify-items: center;
   }
 }
 
 @media screen and (max-width: 757px) {
   .movieslist__items {
-    grid-template-columns: repeat(1, minmax(360px, 1fr));
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
     gap: 16px;
+    margin: 50px auto 0px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .movieslist__morebtn {
-    width: calc(100% - 28px);
+    width: calc(100% - 20px);
+    margin: 80px auto 80px;
   }
 }

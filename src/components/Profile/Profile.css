@@ -114,6 +114,16 @@
   color: #ff4062;
 }
 
+@media screen and (max-width: 770px) {
+  .profile__hello {
+    margin: 236px 0 80px;
+  }
+
+  .profile__btn {
+    margin: 210px 0 0;
+  }
+}
+
 @media screen and (max-width: 440px) {
   .profile__content {
     width: 260px;
