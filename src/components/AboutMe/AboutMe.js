@@ -1,5 +1,6 @@
 import "./AboutMe.css";
 import fotoMe from "../../images/foto_me.jpg";
+import arrowLink from "../../images/link_arrow.svg";
 
 function AboutMe() {
   return (
@@ -21,20 +22,20 @@ function AboutMe() {
       </div>
       <div className="portfolio">
         <h2 className="portfolio_title">Портфолио</h2>
-        <ul className="portfolio__links">
-          <li className="portfolio__item">
-            <p className="portfolio__name">Статичный сайт</p>
-            <a target="blank" className="portfolio__link link" href="https://github.com/XenyaNemkina/how-to-learn"></a>
-          </li>
-          <li className="portfolio__item">
-            <p className="portfolio__name">Адаптивный сайт</p>
-            <a target="blank" className="portfolio__link link" href="https://github.com/XenyaNemkina/russian-travel"></a>
-          </li>
-          <li className="portfolio__item">
-            <p className="portfolio__name">Одностраничное приложение</p>
-            <a target="blank" className="portfolio__link link" href="https://mesto.xenyanemkina.nomoredomains.rocks"></a>
-          </li>
-        </ul>
+        <div className="portfolio__links">
+            <a target="_blank" className="portfolio__link link" href="https://github.com/XenyaNemkina/how-to-learn">
+              <p className="portfolio__name">Статичный сайт</p>
+              <img className="portfolio__link_img" src={arrowLink} alt="ссылка на проект" />
+            </a>
+            <a target="_blank" className="portfolio__link link" href="https://github.com/XenyaNemkina/russian-travel">
+              <p className="portfolio__name">Адаптивный сайт</p>
+              <img className="portfolio__link_img" src={arrowLink} alt="ссылка на проект" />
+            </a>
+            <a target="_blank" className="portfolio__link link" href="https://mesto.xenyanemkina.nomoredomains.rocks/">
+              <p className="portfolio__name">Одностраничное приложение</p>
+              <img className="portfolio__link_img" src={arrowLink} alt="ссылка на проект" />
+            </a>
+        </div>
       </div>
     </section>
   );

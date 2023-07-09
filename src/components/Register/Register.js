@@ -49,7 +49,7 @@ function Register(onSubmit) {
   };
 
   return (
-    <section className="register__container">
+    <main className="register__container">
       <Logo />
       <h2 className="register__title">Добро пожаловать!</h2>
       <form className="register__form" onSubmit={handleSubmitRegister}>
@@ -78,7 +78,7 @@ function Register(onSubmit) {
           </Link>
         </p>
       </form>
-    </section>
+    </main>
   );
 }
 

@@ -39,7 +39,7 @@ function Login({ onSubmit }) {
   };
 
   return (
-    <section className="login__container">
+    <main className="login__container">
       <Logo />
       <h2 className="login__title">Рады видеть!</h2>
       <form className="login__form" onSubmit={handleSubmitLogin}>
@@ -63,7 +63,7 @@ function Login({ onSubmit }) {
           </Link>
         </p>
       </form>
-    </section>
+    </main>
   );
 }
 
