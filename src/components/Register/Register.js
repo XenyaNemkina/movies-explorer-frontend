@@ -49,36 +49,36 @@ function Register(onSubmit) {
   };
 
   return (
-    <section className="auth__container">
+    <main className="register__container">
       <Logo />
-      <h2 className="auth__title">Добро пожаловать!</h2>
-      <form className="auth__form" onSubmit={handleSubmitRegister}>
-        <div className="auth__content">
-          <p className="auth__subtitle">Имя</p>
-          <input className="auth__field" type="text" name="name" value={formValue.name} onChange={handleNameChange} required />
-          <span className={`auth__field_error ${isNameError && "auth__field_error_active"}`}>{isNameError}</span>
+      <h2 className="register__title">Добро пожаловать!</h2>
+      <form className="register__form" onSubmit={handleSubmitRegister}>
+        <div className="register__content">
+          <p className="register__subtitle">Имя</p>
+          <input className="register__field" type="text" name="name" value={formValue.name} onChange={handleNameChange} required />
+          <span className={`register__field_error ${isNameError && "register__field_error_active"}`}>{isNameError}</span>
         </div>
-        <div className="auth__content">
-          <p className="auth__subtitle">E-mail</p>
-          <input className="auth__field" type="email" name="email" autoComplete="off" value={formValue.email} onChange={handleEmailChange} required />
-          <span className={`auth__field_error ${isEmailError && "auth__field_error_active"}`}>{isEmailError}</span>
+        <div className="register__content">
+          <p className="register__subtitle">E-mail</p>
+          <input className="register__field" type="email" name="email" autoComplete="off" value={formValue.email} onChange={handleEmailChange} required />
+          <span className={`register__field_error ${isEmailError && "register__field_error_active"}`}>{isEmailError}</span>
         </div>
-        <div className="auth__content">
-          <p className="auth__subtitle">Пароль</p>
-          <input className="auth__field" type="password" name="password" value={formValue.password} onChange={handlePasswordChange} required />
-          <span className={`auth__field_error ${isPasswordError && "auth__field_error_active"}`}>{isPasswordError}</span>
+        <div className="register__content">
+          <p className="register__subtitle">Пароль</p>
+          <input className="register__field" type="password" name="password" value={formValue.password} onChange={handlePasswordChange} required />
+          <span className={`register__field_error ${isPasswordError && "register__field_error_active"}`}>{isPasswordError}</span>
         </div>
-        <button type="submit" className="auth__savebtn link" onSubmit={handleSubmitRegister}>
+        <button type="submit" className="register__savebtn link" onSubmit={handleSubmitRegister}>
           Зарегистрироваться
         </button>
-        <p className="auth__text">
+        <p className="register__text">
           Уже зарегистрированы?{" "}
-          <Link to="/signin" className="auth__text_link link">
+          <Link to="/signin" className="register__text_link link">
             Войти
           </Link>
         </p>
       </form>
-    </section>
+    </main>
   );
 }
 

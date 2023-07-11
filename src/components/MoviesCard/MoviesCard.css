@@ -6,13 +6,15 @@
   height: 319px;
   border-radius: 6px;
   background-color: #fdfdfd;
+  margin: 0;
+  padding: 0;
   box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.08);
 }
 
 .moviesCard__header {
   display: flex;
   padding: 18px;
-  width: 314px;
+  width: 320px;
   justify-content: space-between;
 }
 
@@ -45,6 +47,7 @@
   background-image: url(../../images/save.png);
   border-radius: 30px;
   border: none;
+  background-position: center;
   margin: 18px 0;
 }
 
@@ -60,6 +63,7 @@
   border: none;
   margin: 18px 0;
   background-image: url(../../images/deletebtn.png);
+  background-position: center;
 }
 
 @media screen and (max-width: 1162px) {
