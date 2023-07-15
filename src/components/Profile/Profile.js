@@ -1,6 +1,6 @@
 import "./Profile.css";
 import Header from "../Header/Header";
-import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { useContext, useState } from "react";
 
 function Profile({ onSubmit }) {
@@ -8,7 +8,7 @@ function Profile({ onSubmit }) {
     name: "",
     email: "",
   });
-  const currentUser = useContext(CurrentUserContext);
+  const CurrentUserContext = useContext(CurrentUserContext);
   const [isError, setIsError] = useState("");
   const [isUpdateMode, setIsUpdateMode] = useState("ftrue");
 

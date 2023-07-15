@@ -16,7 +16,7 @@ function Login({ onSubmit }) {
     if (!formValue.email || !formValue.password) {
       return;
     }
-    onsubmit(formValue.email, formValue.password);
+    onSubmit(formValue.email, formValue.password);
     setFormValue({ email: "", password: "" });
   };
 

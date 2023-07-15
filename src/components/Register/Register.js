@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Logo from "../Logo/Logo";
 import { useState } from "react";
 
-function Register(onSubmit) {
+function Register({onSubmit}) {
   const [isNameError, setIsNameError] = useState("");
   const [isEmailError, setIsEmailError] = useState("");
   const [isPasswordError, setIsPasswordError] = useState("");

@@ -1,12 +1,11 @@
 import "./MoviesCardList.css";
 import { useEffect, useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import movies from "../../utils/movieData";
 
 function MoviesCardList() {
   const [films, setFilms] = useState([]);
 
-  useEffect(() => {
+  useEffect((movies) => {
     setFilms(movies);
   }, []);
 

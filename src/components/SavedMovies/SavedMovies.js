@@ -1,8 +1,7 @@
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import movieData from "../../utils/movieData";
 
-function SavedMovies() {
+function SavedMovies({movieData}) {
   return (
     <main className="savedmovies">
       <SearchForm />
