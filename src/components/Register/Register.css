@@ -56,14 +56,23 @@
 
 .register__field_error {
   display: block;
+  font-size: 10px;
   min-height: 12px;
   margin: 6px 0 0;
 }
 
 .register__field_error_active {
   color: #ff4062;
-  margin: 6px 0 0;
   padding: 0;
+}
+
+.register__field_error_server {
+  display: block;
+  color: #ff4062;
+  padding: 0;
+  margin: 100px 0 0;
+  font-size: 10px;
+  min-height: 12px;
 }
 
 .register__savebtn {
@@ -75,7 +84,14 @@
   font-size: 14px;
   font-weight: 500;
   color: #fff;
-  margin: 134px 0 16px;
+  margin: 20px 0 16px;
+}
+
+.register__savebtn_disabled {
+  border: 1px solid #e8e8e8;
+  background-color: #e8e8e8; 
+  color: #AAA;
+  pointer-events: none;
 }
 
 .register__text {
@@ -103,7 +119,7 @@
 
   .register__savebtn {
     font-size: 12px;
-    margin: 222px 0 14px;
+    margin: 122px 0 14px;
   }
 
   .register__text {

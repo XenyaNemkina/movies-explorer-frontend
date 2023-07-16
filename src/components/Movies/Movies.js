@@ -1,11 +1,11 @@
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
-function Movies({movieData}) {
+function Movies({findMovies, handleSmallMetr, toggleSmallMeter, movieSave, deleteMovie }) {
   return (
     <main className="movies">
-      <SearchForm />
-      <MoviesCardList movies={movieData} />
+      <SearchForm findMovies={findMovies} handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} />
+      <MoviesCardList movieSave={movieSave} deleteMovie={deleteMovie} />
     </main>
   );
 }

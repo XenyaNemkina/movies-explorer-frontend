@@ -1,24 +1,32 @@
 import "./MoviesCard.css";
-import movieImg from "../../images/pic__COLOR_pic.png";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { MOVIES_URL } from "../../utils/constants";
 
-function MoviesCard() {
+function MoviesCard({data, isSaved, id}) {
+  let { nameRU, duration, movieImg, trailerLink } = data;
+  let timeLength = `${Math.floor(duration / 60)}ч ${duration % 60 ? duration % 60 + 'м' : ''}`
+  if(timeLength[0] === '0'){
+    timeLength = timeLength.split(' ')[1]
+  }
+  if(!isSaved){
+    movieImg = `${MOVIES_URL}${data.image.url}`
+  }
   const location = useLocation();
   const path = location.pathname;
-  const [isSaved, setIsSaved] = useState(false);
 
   const saveMovies = () => {
-    setIsSaved(!isSaved);
+  
   };
 
   return (
     <li className="moviesCard">
       <div className="moviesCard__header">
-        <h2 className="moviesCard__title">В погоне за Бенкси</h2>
-        <p className="moviesCard__duration">27 минут</p>
+        <h2 className="moviesCard__title">{nameRU}</h2>
+        <p className="moviesCard__duration">{timeLength}</p>
       </div>
-      <img className="moviesCard__img" src={movieImg} alt="В погоне за Бенкси" />
+      <a className="moviecard__link link" target="_blank" href={trailerLink}>
+        <img className="moviesCard__img" src={movieImg} alt="превью фильма" />
+      </a>
       {path === "/movies" && <button onClick={saveMovies} className={`moviesCard__btn ${isSaved && "moviesCard__btn_saved"} link`} type="button"></button>}
       {path === "/saved-movies" && <button className="moviesCard__btn_delete link" type="button"></button>}
     </li>

@@ -1,42 +1,16 @@
 import "./Login.css";
 import { Link } from "react-router-dom";
 import Logo from "../Logo/Logo";
-import { useState } from "react";
+import useFormValidation from "../../hooks/useFormValidation";
 
-function Login({ onSubmit }) {
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [formValue, setFormValue] = useState({
-    email: "",
-    password: "",
-  });
+function Login({onSubmit}) {
+  const {values, errors, isFormValid, handleChange, handleResetValidation} = useFormValidation();
 
-  const handleSubmitLogin = (evt) => {
-    evt.preventDefault();
-    if (!formValue.email || !formValue.password) {
-      return;
-    }
-    onSubmit(formValue.email, formValue.password);
-    setFormValue({ email: "", password: "" });
-  };
-
-  const handleEmailChange = (evt) => {
-    const value = evt.target.value;
-    const name = evt.target.name;
-    setFormValue({ ...formValue, [name]: value });
-    if (!evt.target.value) {
-      setEmailError("Что-то пошло не так...");
-    }
-  };
-
-  const handlePasswordChange = (evt) => {
-    const value = evt.target.value;
-    const name = evt.target.name;
-    setFormValue({ ...formValue, [name]: value });
-    if (!evt.target.value) {
-      setPasswordError("Что-то пошло не так...");
-    }
-  };
+  const handleSubmitLogin = (e) => {
+    e.preventDefault();
+    onSubmit(values.email , values.password);
+    handleResetValidation()
+  }
 
   return (
     <main className="login__container">
@@ -45,15 +19,16 @@ function Login({ onSubmit }) {
       <form className="login__form" onSubmit={handleSubmitLogin}>
         <div className="login__content">
           <p className="login__subtitle">E-mail</p>
-          <input className="login__field" type="email" name="email" autoComplete="off" value={formValue.email} onChange={handleEmailChange} required />
-          <span className={`login__field_error ${emailError && "login__field_error_active"}`}>{emailError}</span>
+          <input className="login__field" type="email" name="email" autoComplete="off" value={values.email || ""} onChange={handleChange} required />
+          <span className={`login__field_error ${(errors.email) && "login__field_error_active"}`}>{errors.email}</span>
         </div>
         <div className="login__content">
           <p className="login__subtitle">Пароль</p>
-          <input className="login__field" type="password" name="password" value={formValue.password} onChange={handlePasswordChange} required />
-          <span className={`login__field_error ${passwordError && "login__field_error_active"}`}>{passwordError}</span>
+          <input className="login__field" type="password" name="password" value={values.password || ""} autoComplete="off" onChange={handleChange} required />
+          <span className={`login__field_error ${(errors.password) && "login__field_error_active"}`}>{errors.password}</span>
         </div>
-        <button type="submit" className="login__savebtn link" onSubmit={handleSubmitLogin}>
+      
+        <button type="submit" className={`login__savebtn link ${!isFormValid && `login__savebtn_disabled`}`} disabled={!isFormValid} onSubmit={handleSubmitLogin}>
           Войти
         </button>
         <p className="login__text">

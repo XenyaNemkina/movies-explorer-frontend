@@ -3,7 +3,7 @@ class MoviesApi {
     this._url = options.baseUrl
   }
 
-  getCards() {
+  getMovies() {
     return fetch(`${this._url}`, {
       headers: {
         "Content-Type": "application/json"
@@ -26,4 +26,4 @@ const moviesApi = new MoviesApi({
   }
 );
 
-export default MoviesApi
+export default moviesApi;

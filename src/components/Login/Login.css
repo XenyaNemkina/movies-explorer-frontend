@@ -57,6 +57,7 @@
 .login__field_error {
   display: block;
   min-height: 12px;
+  font-size: 10px;
   margin: 6px 0 0;
 }
 
@@ -75,7 +76,14 @@
   font-size: 14px;
   font-weight: 500;
   color: #fff;
-  margin: 203px 0 16px;
+  margin: 134px 0 16px;
+}
+
+.login__savebtn_disabled {
+  border: 1px solid #e8e8e8;
+  background-color: #e8e8e8; 
+  color: #AAA;
+  pointer-events: none;
 }
 
 .login__text {
@@ -103,7 +111,7 @@
 
   .login__savebtn {
     font-size: 12px;
-    margin: 289px 0 14px;
+    margin: 309px 0 14px;
   }
 
   .login__text {
