@@ -2,6 +2,7 @@ import "./SearchForm.css";
 import React, { useState } from 'react'
 import useWindowDimensions from "../../utils/changeWindow";
 import {useLocation} from "react-router-dom";
+import SmallMeter from "../SmallMeter/SmallMeter";
 
 function SearchForm({findMovies, handleSmallMetr, toggleSmallMeter}) {
   const location = useLocation();
@@ -27,12 +28,9 @@ function SearchForm({findMovies, handleSmallMetr, toggleSmallMeter}) {
           <input required className="searchform__input" value={val} placeholder="Фильм" onChange={writeValue}></input>
           <button className="searchform__btn link" type="submit"></button>
         </div>
-        <fieldset className="searchform__filter">
-          <input className="searchform__checkbox" type="checkbox"></input>
-          <h3 className="searchform__text">Короткометражки</h3>
-        </fieldset>
+        
       </form>
-      <hr className="searchform__line" />
+     <hr className="searchform__line" />
     </section>
   );
 }

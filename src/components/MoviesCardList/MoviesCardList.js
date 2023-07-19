@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import useWindowDimensions from "../../utils/changeWindow";
 
-function MoviesCardList({ isSaved, postLike, testRender, deleteCard}) {
+function MoviesCardList({ isSaved, postLike, deleteCard}) {
   const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
   let windowWidth = useWindowDimensions().width
   let rowNumber
@@ -68,7 +68,6 @@ function MoviesCardList({ isSaved, postLike, testRender, deleteCard}) {
               id ={el.movieId? el.movieId : el._id}
               key={el.movieId + Math.random()}
               isSaved={true}
-              testRender={testRender}
               deleteCard={deleteCard}
             />)
             :
@@ -78,7 +77,6 @@ function MoviesCardList({ isSaved, postLike, testRender, deleteCard}) {
             id ={el.movieId? el.movieId : el._id}
             key={el.movieId + Math.random()}
             isSaved={true}
-            testRender={testRender}
             deleteCard={deleteCard}
           />)
           :
@@ -118,9 +116,7 @@ function MoviesCardList({ isSaved, postLike, testRender, deleteCard}) {
                 : null
         }
       </ul>
-      <button className="movieslist__morebtn link" type="button">
-        Ещё
-      </button>
+      {isSaved || !findList || buttonVisible ? null : <button type="button" className="moviesCardList__more" onClick={renderLimiter}>Ещё</button>}
     </section>
   );
 }

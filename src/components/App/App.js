@@ -29,7 +29,8 @@ function App() {
   const [errorMovies, setErrorMovies] = useState('');
   const [toggleSmallMeter, setToggleSmallMeter] = useState(false)
   const [reactionsOnSearch, setReactionsOnSearch] = useState(false)
-  const [research, setReSearch] = useState(false)
+  const [research, setReSearch] = useState(false);
+  const [text, setText] = useState('')
   const navigate = useNavigate();
 
   const handleSetUserData = useCallback(async () => {
@@ -101,7 +102,9 @@ function App() {
     val = val.toLowerCase()
     moviesApi.getMovies()
     .then(res => {
+      console.log(res);
       let list = res.filter(el => el.nameRU.toLowerCase().includes(val))
+      console.log(list);
       if( list.length === 0 ){
         setErrorMovies("Ничего не найдено")
         return null
