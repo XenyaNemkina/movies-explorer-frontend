@@ -1,124 +1,121 @@
 import "./MoviesCardList.css";
-import { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import useWindowDimensions from "../../utils/changeWindow";
 
-function MoviesCardList({ isSaved, postLike, deleteCard}) {
-  const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
-  let windowWidth = useWindowDimensions().width
-  let rowNumber
-  if(windowWidth<700){
-    rowNumber = 5
-  }
-  else if(windowWidth>=700 && windowWidth<850){
-    rowNumber = 2
-  }
-  else if(windowWidth>=850 && windowWidth<1140){
-    rowNumber = 3
-  }
-  else {
-    rowNumber = 4
-  }
+/*function MoviesCardList({ movies }) {
+ const CARDS_RENDER_COUNT = {
+    1: {
+      INITIAL: 5,
+      ADD: 2,
+    },
+    2: {
+      INITIAL: 8,
+      ADD: 2,
+    },
+    3: {
+      INITIAL: 12,
+      ADD: 3,
+    },
+    default: {
+      INITIAL: 6,
+      ADD: 6,
+    },
+  };
+  const [renderedMovies, setRenderedMovies] = React.useState([""]);
+  /*const grid = React.useRef();
 
-  if (+numberOfMoviesDisplayed < 4){
-    localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
-    setNumberOfMoviesDisplayed(rowNumber.toString())
-  }
+  React.useEffect(() => {
+    if (movies.length) {
+      const columnsCount = countGridColumns(grid.current);
+      const initialCardsCount =
+        CARDS_RENDER_COUNT[columnsCount]?.INITIAL ??
+        CARDS_RENDER_COUNT['default'].INITIAL;
+      const array = movies.slice(0, initialCardsCount);
+      setRenderedMovies(array);
+    }
+  }, [movies]);
 
-  const findList = JSON.parse(localStorage.getItem('findList'))
-  const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
-  let displaySearchSavedFilms
-  if(localStorage.getItem('valInputSavedFilms')?.length){
-    displaySearchSavedFilms = JSON.parse(localStorage.getItem('SavedFilmlistMatchInput'))
-  }
-
-
-
-  const [limitCoin, setLimitCoin] = useState(Number(numberOfMoviesDisplayed))
-  const [buttonVisible, setButtonVisible] = useState(false)
-
-  function renderLimiter(val= 0) {
-    setLimitCoin((prev)=> prev + rowNumber)
-    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + rowNumber).toString())
-  }
-
-  function disableButton(val){
-    setButtonVisible(val)
+  function countGridColumns(gridElement) {
+    const gridComputedStyle = window.getComputedStyle(gridElement);
+    return gridComputedStyle.getPropertyValue('grid-template-columns').split(' ')
+      .length;
   }
 
-  useEffect(()=> {
-    if(Number(localStorage.getItem('numberOfMoviesDisplayed')) === 0){
-      localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
-      setLimitCoin(rowNumber)
-      disableButton(false)
-  }}, [localStorage.getItem('numberOfMoviesDisplayed'), windowWidth])
+  function handleMoreClick() {
+    const columnsCount = countGridColumns(grid.current);
+    const renderedCountFixed =
+      Math.ceil(renderedMovies.length / columnsCount) * columnsCount;
+    const moreCardsCount =
+      CARDS_RENDER_COUNT[columnsCount]?.ADD ??
+      CARDS_RENDER_COUNT['default'].ADD;
+    const array = movies.slice(0, renderedCountFixed + moreCardsCount);
+    setRenderedMovies(array);
+  }
 
-  if(limitCoin >= findList?.length){
-    setLimitCoin(findList.length - 1)
-    disableButton(true)
+  function checkIsMovieSaved(movie) {
+    return savedMovies.some((savedMovie) => savedMovie.movieId === movie.movieId);
   }
 
   return (
     <section className="movieslist">
-      <ul className="movieslist__items">
-      {
-          displaySearchSavedFilms?.length && isSaved ?
-            displaySearchSavedFilms?.map(el => <MoviesCard
-              data={el}
-              id ={el.movieId? el.movieId : el._id}
-              key={el.movieId + Math.random()}
-              isSaved={true}
-              deleteCard={deleteCard}
-            />)
-            :
-
-          isSaved ? savedList?.map(el => <MoviesCard
-            data={el}
-            id ={el.movieId? el.movieId : el._id}
-            key={el.movieId + Math.random()}
-            isSaved={true}
-            deleteCard={deleteCard}
-          />)
-          :
-          findList?.length - limitCoin <= 1 ?
-            findList?.map((el) => {
-              let isLike
-              if(savedList){
-                isLike = savedList.filter(savedListEl => savedListEl.movieId === el.id)
-              }else{
-                isLike = savedList?.filter(savedListEl => savedListEl.movieId === el.id)
-              }
-              return <MoviesCard data={el} key={el.id} postLike={postLike} id = {el.id} isLike={isLike} deleteCard={deleteCard}/>
-            })
-            :
-            findList?.length > 4 ?
-              findList.slice(0, limitCoin).map((el) => {
-                let isLike
-                if(savedList){
-                  isLike = savedList.filter(savedListEl => savedListEl.movieId === el.id)
-                }else{
-                  isLike = savedList?.filter(savedListEl => savedListEl.movieId === el.id)
-                }
-
-                return <MoviesCard data={el} key={el.id} postLike={postLike} id = {el.id} isLike={isLike} deleteCard={deleteCard}/>
-              })
-              :
-              findList?.length<4 && findList?.length>0 ?
-                findList.map((el) => {
-                  let isLike
-                  if(savedList){
-                    isLike = savedList.filter(savedListEl => savedListEl.movieId === el.id)
-                  }else{
-                    isLike = savedList?.filter(savedListEl => savedListEl.movieId === el.id)
-                  }
-                  return <MoviesCard data={el} key={el.id} postLike={postLike} id = {el.id} isLike={isLike} deleteCard={deleteCard}/>
-                })
-                : null
-        }
+      <ul className="movieslist__items" >
+      {renderedMovies.map((movie) => {
+          return (
+            <MoviesCard
+              movie={movie}
+              key={movie.movieId}
+              
+            />
+          )
+        })}
       </ul>
-      {isSaved || !findList || buttonVisible ? null : <button type="button" className="moviesCardList__more" onClick={renderLimiter}>Ещё</button>}
+      {renderedMovies.length < movies.length && (
+         <div className="more section">
+         <button className="more__button" type="button" onClick={""}>
+          </button>
+       </div>
+      )}
     </section>
-  );
-}
+  );*/
+
+  function MoviesCardList() {
+    const [movies, setMovies] = useState([]);
+  
+    useEffect(() => {
+      setMovies(movies);
+    }, []);
+  
+    const cardsElements =movies.map((card) => {
+      return (
+        <MoviesCard
+          key={card.movieId}
+          card={card}
+          country={card.country}
+          director={card.director}
+          duration={card.duration}
+          year={card.year}
+          description={card.description}
+          image={card.image}
+          trailerLink={card.trailerLink}
+          thumbnail={card.thumbnail}
+          owner={card.owner}
+          movieId={card.movieId}
+          nameRU={card.nameRU}
+          nameEN={card.nameEN}
+          like={card.like}
+        />
+      );
+    });
+    return (
+      <section className="movieslist">
+        <ul className="movieslist__items">{cardsElements}</ul>
+        <button className="movieslist__morebtn link" type="button">
+          Ещё
+        </button>
+      </section>
+    );
+  }
+  
+
 
 export default MoviesCardList;

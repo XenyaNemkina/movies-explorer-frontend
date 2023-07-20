@@ -9,6 +9,8 @@ function Login({onSubmit}) {
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     onSubmit(values.email , values.password);
+    console.log(values);
+    console.log(values.password)
     handleResetValidation()
   }
 

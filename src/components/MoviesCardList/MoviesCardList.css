@@ -15,7 +15,7 @@
   grid-template-rows: auto;
   gap: 28px 32px;
   box-sizing: border-box;
-  margin: 70px 70px 10px;
+  margin:60px 70px 10px;
 }
 
 .movieslist__morebtn {
@@ -37,7 +37,7 @@
   .movieslist__items {
     grid-template-columns: repeat(2, minmax(342px, 1fr));
     gap: 35px 24px;
-    margin: 80px auto 10px;
+    margin: 70px auto 10px;
     justify-items: center;
   }
 }
@@ -46,13 +46,13 @@
   .movieslist__items {
     grid-template-columns: repeat(1, minmax(300px, 1fr));
     gap: 16px;
-    margin: 50px auto 0px;
+    margin: 40px auto 0px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .movieslist__morebtn {
     width: calc(100% - 20px);
-    margin: 80px auto 80px;
+    margin: 70px auto 80px;
   }
 }

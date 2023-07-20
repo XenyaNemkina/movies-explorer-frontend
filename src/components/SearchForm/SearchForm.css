@@ -109,6 +109,17 @@
   width: 14px;
 }
 
+.searchform__error {
+  font-family: "Inter", Arial, sans-serif;
+  display: block;
+  color: #ff4062;
+  padding: 0;
+  text-align: center;
+  margin: 10px 0 0;
+  font-size: 20px;
+  min-height: 22px;
+}
+
 @media screen and (max-width: 770px) {
   .searchform {
     width: calc(100% - 45px);
