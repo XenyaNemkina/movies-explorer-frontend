@@ -2,42 +2,47 @@ import "./SearchForm.css";
 import React, { useState } from 'react'
 import useWindowDimensions from "../../utils/changeWindow";
 import {useLocation} from "react-router-dom";
-import useFormValidation from "../../hooks/useFormValidation";
+import LabelSearch from '../LabelSearch/LabelSearch'
+import SmallMeter from '../SmallMeter/SmallMeter'
 
-
-function SearchForm({onSubmit}) { 
-  const [formValue, setFormValue] = React.useState({
-    searchText: "",
-  });
-const [error, setError ] = useState();
-
-const handleChange = (evt) => {
-  const value = evt.target.value;
-  const name = evt.target.name;
-  setFormValue({ ...formValue, [name]: value });
-};
-
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    if (!formValue.searchText) {
-      setError("Ничего не найдено");
-      return
+  function SearchForm({findMovies, handleSmallMetr, toggleSmallMeter}) {
+    const location = useLocation();
+    let inputValue
+    if (location.pathname === '/movies'){
+      inputValue = localStorage.getItem('valueInput') ? localStorage.getItem('valueInput') : ''
     }
-    onSubmit(formValue.searchText);
-    setFormValue({searchText: ""})
-  }
+    if (location.pathname ==='/saved-movies'){
+      inputValue = localStorage.getItem('valueInputSavedFilms') ? localStorage.getItem('valueInputSavedFilms') : ''
+    }
+  
+    const windowWidth = useWindowDimensions().width >= 730
+    const [value, setValue] = useState(inputValue)
+  
+    function writeValue(e) {
+      setValue(e.target.value)
+    }
+  
+    const handleSubmit = (evt) => {
+      evt.preventDefault();
+      findMovies(evt, value)
+    }
 
 
   return (
     <section className="searchform">
       <form className="searchform__form" onSubmit={handleSubmit} noValidate>
-        <div className="searchform__bar">
-          <input required className="searchform__input" type="text" name="search" value={formValue.searchText} placeholder="Фильм" onChange={handleChange}></input>
-          <button className="searchform__btn link" type="submit"></button>
-        </div>
+      <LabelSearch writeValue={writeValue} value={value}/>
+        {windowWidth && <SmallMeter
+          handleSmallMetr={handleSmallMetr}
+          toggleSmallMeter={toggleSmallMeter}
+        />}
       </form>
+      {!windowWidth && <SmallMeter
+        handleSmallMetr={handleSmallMetr}
+        toggleSmallMeter={toggleSmallMeter}
+      />}
      <hr className="searchform__line" />
-    <span className="searchform__error">{error}</span>
+    <span className="searchform__error"></span>
     </section>
   );
 }

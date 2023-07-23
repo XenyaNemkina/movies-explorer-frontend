@@ -1,16 +1,16 @@
+import React, { useContext, useState } from "react";
 import "./Profile.css";
 import Header from "../Header/Header";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
-import { useContext, useState } from "react";
 
 function Profile({ onSubmit }) {
   const [formValue, setFormValue] = useState({
     name: "",
     email: "",
   });
-  const CurrentUserContext = useContext(CurrentUserContext);
+  const currentUser = React.useContext(CurrentUserContext);
   const [isError, setIsError] = useState("");
-  const [isUpdateMode, setIsUpdateMode] = useState("ftrue");
+  const [isUpdateMode, setIsUpdateMode] = useState("true");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

@@ -9,8 +9,6 @@ function Login({onSubmit}) {
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     onSubmit(values.email , values.password);
-    console.log(values);
-    console.log(values.password)
     handleResetValidation()
   }
 
@@ -29,7 +27,6 @@ function Login({onSubmit}) {
           <input className="login__field" type="password" name="password" value={values.password || ""} autoComplete="off" onChange={handleChange} required />
           <span className={`login__field_error ${(errors.password) && "login__field_error_active"}`}>{errors.password}</span>
         </div>
-      
         <button type="submit" className={`login__savebtn link ${!isFormValid && `login__savebtn_disabled`}`} disabled={!isFormValid} onSubmit={handleSubmitLogin}>
           Войти
         </button>

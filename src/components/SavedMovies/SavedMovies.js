@@ -1,52 +1,14 @@
+import React from "react";
 import SearchForm from "../SearchForm/SearchForm";
-import SavedMoviesCardList from "../SavedMoviesCardList/SavedMoviesCardList"
+import MoviesCardList from "../MoviesCardList/MoviesCardList";
 
-function SavedMovies() {
-
-  const [foundMovies, setFoundMovies] = React.useState([]);
-  const [searchText, setSearchText] = React.useState('');
-  const [areShortiesSeleted, setAreShortiesSeleted] = React.useState(false);
-
-  function handleSearchFormSubmit({ searchText, areShortiesSeleted }) {
-    setAreShortiesSeleted(areShortiesSeleted);
-    setSearchText(searchText);
-  }
-
-  function handleCheckboxChange(value) {
-    setAreShortiesSeleted(value);
-  }
-
-  React.useEffect(() => {
-    if (savedMovies) {
-      const foundMovies = searchMovies(
-        savedMovies,
-        searchText,
-        areShortiesSeleted,
-      );
-      setFoundMovies(foundMovies);
-    }
-  }, [searchText, areShortiesSeleted, savedMovies]);
-
-  // Сохранение фильмов
-  async function handleCardClick(movie) {
-    const savedMovie = savedMovies.find(
-      (savedMovie) => savedMovie.movieId === movie.movieId,
-    );
-    await onDeleteSavedMovie(savedMovie);
-  } 
-
+function Movies({findMovies, handleSmallMetr, toggleSmallMeter, saveMovie, deleteMovie}) {
   return (
-    <main className="savedmovies">
-      <SearchForm onSubmit={handleSearchFormSubmit}
-          onCheckboxChange={handleCheckboxChange}
-          defaultSearchText={searchText}
-          defaultAreShortiesSeleted={areShortiesSeleted} />
-      <SavedMoviesCardList movies={foundMovies}
-          savedMovies={savedMovies}
-          onCardClick={handleCardClick}
-          isSavedMoviesSearchResult />
+    <main className="movies">
+      <SearchForm findMovies={findMovies} handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} />
+      <MoviesCardList isSaved={true} saveMovie={saveMovie} deleteMovie={deleteMovie} />
     </main>
   );
 }
 
-export default SavedMovies;
+export default Movies;

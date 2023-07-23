@@ -115,10 +115,10 @@ getInitialMovies() {
 }
 
 getSavedFilms() {
-  const jwt = localStorage.getItem('jwt')
+  const token = localStorage.getItem('token')
   return fetch(`${this._baseUrl}/movies`, {
     headers: {
-      authorization: jwt,
+      authorization: token,
       "Content-Type": "application/json"
     },
   })
@@ -127,11 +127,11 @@ getSavedFilms() {
 }
 
 deleteMovie(cardId) {
-  const jwt = localStorage.getItem('jwt')
+  const token = localStorage.getItem('token')
   return fetch(`${this._baseUrl}/movies/${cardId}`, {
     method: 'DELETE',
     headers: {
-      authorization: `${jwt}`,
+      authorization: `${token}`,
       'Content-Type': 'application/json'
     }
   })

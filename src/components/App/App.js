@@ -90,35 +90,34 @@ function App() {
     navigate("/")
   }
   
-
-  function findAllMovies(e, val) {
+/* !!! */
+  function findAllMovies(evt, value) {
     setIsLoaderActive(true)
-    e.preventDefault()
-    if(!val){
+    evt.preventDefault()
+    if(!value){
       setIsLoaderActive(false)
-      setErrorMovies("Введите значение")
+      setText('Введите значение.')
       return null
     }
-    val = val.toLowerCase()
+    value = value.toLowerCase()
     moviesApi.getMovies()
     .then(res => {
-      console.log(res);
-      let list = res.filter(el => el.nameRU.toLowerCase().includes(val))
-      console.log(list);
+      let list = res.filter(el => el.nameRU.toLowerCase().includes(value))
       if( list.length === 0 ){
-        setErrorMovies("Ничего не найдено")
+        setText('Ничего не найдено.')
+        console.log('this it')
         return null
       }
-      const isSmallMeter = localStorage.getItem('smallMeter')
-      if(isSmallMeter === 'false'){
+      const IsSmallMeter = localStorage.getItem('smallMeter')
+      if(IsSmallMeter === 'false'){
         localStorage.setItem('findList', JSON.stringify(list))
-        localStorage.setItem('valInput', val)
+        localStorage.setItem('valueInput', value)
         localStorage.setItem('numberOfMoviesDisplayed', '0')
         setReactionsOnSearch(!reactionsOnSearch)
       }else{
         list = list.filter(el => el.duration < 40)
         localStorage.setItem('findList', JSON.stringify(list))
-        localStorage.setItem('valInput', val)
+        localStorage.setItem('valueInput', value)
         localStorage.setItem('numberOfMoviesDisplayed', '0')
         setReactionsOnSearch(!reactionsOnSearch)
       }
@@ -128,23 +127,24 @@ function App() {
       .finally(() => setIsLoaderActive(false))
   }
 
-  function findMainMovies(e, val) {
-    e.preventDefault()
-    val = val.toLowerCase()
-    localStorage.setItem('valInputSavedFilms', val)
-    const saveFilms = JSON.parse(localStorage.getItem('savedMoviesList'))
-    const isSmallMeter = localStorage.getItem('smallMeter')
-    let list = saveFilms.filter(el => el.nameRU.toLowerCase().includes(val))
-    if(isSmallMeter === 'false'){
-      localStorage.setItem('SavedFilmlistMatchInput', JSON.stringify(list))
+  function findSavedMovies(evt, value) {
+    evt.preventDefault()
+    value = value.toLowerCase()
+    localStorage.setItem('valueInputSavedMovies', value)
+    const saveMovies = JSON.parse(localStorage.getItem('savedMoviesList'))
+
+    const IsSmallMeter = localStorage.getItem('smallMeter')
+    let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
+    if(IsSmallMeter === 'false'){
+      localStorage.setItem('SavedMovielistMatchInput', JSON.stringify(list))
       setReactionsOnSearch(!reactionsOnSearch)
     }else{
-      list = saveFilms.filter(el => el.duration < 40)
-      localStorage.setItem('SavedFilmlistMatchInput', JSON.stringify(list))
+      list = saveMovies.filter(el => el.duration < 40)
+      localStorage.setItem('SavedMovieslistMatchInput', JSON.stringify(list))
       setReactionsOnSearch(!reactionsOnSearch)
     }
-    if( saveFilms.length === 0  || list.length===0){
-      setErrorMovies('Ничего не найдено.')
+    if( saveMovies.length === 0  || list.length===0){
+      setText('Ничего не найдено.')
       return null
     }
   }
@@ -158,18 +158,16 @@ function App() {
     setReSearch(!research)
   }
 
-  function movieSave(id) {
+  function saveMovie(id) {
     setIsLoaderActive(true)
-    const targetMovie = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === id)[0]
-    newMainApi.postMovie(targetMovie)
-    .then(res => {
+    const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === id)[0]
+    newMainApi.postMovie(targetFilm).then(res => {
       newMainApi.getSavedFilms()
         .then(res => {
-          let filmWithOwner = res.filter(el => el.owner === currentUser._id)
-          if(!filmWithOwner){
-
+          let movieWithOwner = res.filter(el => el.owner === currentUser._id)
+          if(!movieWithOwner){
           }else{
-            localStorage.setItem('savedMoviesList', JSON.stringify(filmWithOwner))
+            localStorage.setItem('savedMoviesList', JSON.stringify(movieWithOwner))
           }
         })
         .catch(err => console.log(err))
@@ -177,18 +175,19 @@ function App() {
     })
   }
 
-  function deleteMovie(movieId) {
+  function deleteMovie(cardId) {
     setIsLoaderActive(true)
-    deleteMovie(movieId)
+    deleteMovie(cardId)
       .then(res => {
         const listBeforeDelete = JSON.parse(localStorage.getItem('savedMoviesList'))
-        const listWithDelete = listBeforeDelete.filter(el => el._id !== movieId)
+        const listWithDelete = listBeforeDelete.filter(el => el._id !== cardId)
         localStorage.setItem('savedMoviesList', JSON.stringify(listWithDelete))
       })
       .catch(err => console.log(err))
       .finally(() => setIsLoaderActive(false))
   }
 
+/* !!! */
   const handleBurger = () => {
     setIsBurger(!isBurger)
   }; 
@@ -208,22 +207,21 @@ function App() {
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Header onBurgerClick={handleBurger} />
               <Movies
-                findMovies={findAllMovies}
-                handleSmallMetr={handleSmallMetr}
-                toggleSmallMeter={toggleSmallMeter}
-                movieSave={movieSave}
-                deleteMovie={deleteMovie} />
+                 findMovies={findAllMovies}
+                 handleSmallMetr={handleSmallMetr}
+                 toggleSmallMeter={toggleSmallMeter}
+                 saveMovie={saveMovie}
+                 deleteMovie={deleteMovie} />
               <Footer />
             </ProtectedRoute>} />
             <Route path="/saved-movies" element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <Header onBurgerClick={handleBurger} />
-                <SavedMovies 
-                  findMovies={findMainMovies}
+                <SavedMovies   
+                  findMovies={findSavedMovies}
                   handleSmallMetr={ handleSmallMetr }
                   toggleSmallMeter={toggleSmallMeter}
-                  deleteMovie={deleteMovie}
-                />
+                  deleteMovie={deleteMovie} /> 
                 <Footer />
               </ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
