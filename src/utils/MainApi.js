@@ -1,7 +1,56 @@
+import {MY_API_URL} from './constants';
+
 class MainApi {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
+  constructor(url) {
+    this._url = url;
+    this._headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  };
+
+/*  _checkHeaders = () => {
+    this._token = localStorage.getItem('token');
+    this._headers.authorization = `Bearer ${this._token}`;
+    return this._headers;
+  };*/
+
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status} ${res.statusText}`);
+    }
+  }
+
+  register(name, email, password) {
+    return fetch(`${this._url}/signup`, {
+      method: 'POST',
+      headers:  this._headers,
+      body: JSON.stringify({name, email, password})
+    })
+    .then(this._checkResponse)
+    .then((res) => {
+      return res;
+    })
+  }
+
+  login(email, password) {
+    return fetch(`${this._url}/signin`, {
+      method: 'POST',
+      headers:  {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({email, password})
+    })
+    .then(this._checkResponse)
+    .then((data) => {
+      if (data.token){
+        localStorage.setItem('token', data.token);
+        return data;
+      }
+    })
   }
 
   _checkHeaders = () => {
@@ -10,137 +59,62 @@ class MainApi {
     return this._headers;
   };
 
-  _getResponseData(res) {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+  getUserInfo() {
+    return fetch(`${this._url}/users/me`, {
+      headers: this._checkHeaders(),
+    })
+    .then(this._checkResponse)
   }
 
-  register(name, email, password) {
-    return fetch(`${this._baseUrl}/signup`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, password }),
-    })
-    .then(res => this._getResponseData(res))
-    .then((res) => {
-      return res;
-    })
-  }
-
-  authorization(email, password) {
-    return fetch(`${this._baseUrl}/signin`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({email, password})
-    })
-    .then((res) =>
-      this._getResponseData(res))
-    .then((data) => {
-      if (data.token){
-        localStorage.setItem('token', data.token);
-      }
-    })
-  }
-
-  checkToken(token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-    .then(res => this._getResponseData(res))
-      .then((data) => data);
-  }
 
   getUserInfo() {
-    return fetch(`${this._baseUrl}/users/me`,
-    {headers: this._checkHeaders()})
-    .then(this._getResponseData);
+    return fetch(`${this._url}/users/me`, {
+      headers: this._checkHeaders(),
+    })
+    .then(this._checkResponse)
   }
 
-getInitialMovies() {
-  return fetch(`${this._baseUrl}/movies`, 
-  {headers: this._checkHeaders()})
-  .then(this._getResponseData);
- }
+  updateUserInfo({name, email}) {
+    return fetch(`${this._url}/users/me`, {
+      method: 'PATCH',
+      headers: this._checkHeaders(),
+      body: JSON.stringify({name, email})
+    })
+    .then(this._checkResponse)
+  }
 
- postMovie(data) {
-  let {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    nameRU,
-    nameEN,
-    id,
-  } = data
+  getSavedMovies() {
+    return fetch(`${this._url}/movies`, {
+      headers: this._checkHeaders(),
+    })
+    .then(this._checkResponse)
+  }
 
-  const token = localStorage.getItem('token')
-  return fetch(`${this._baseUrl}/movies`, {
-    method: 'POST',
-    headers: {
-      authorization: token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(
-      {
-        country: country || 'NoSelected',
-        director: director || 'NoSelected',
-        duration,
-        year,
-        description,
-        image: `https://api.nomoreparties.co${image.url}`,
-        trailerLink,
-        nameRU,
-        nameEN,
-        thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
-        movieId: id,
-      }
-    )
-  })
-  .then(this._getResponseData)
-}
+  deleteMovie(id) {
+    return fetch(`${this._url}/movies/${id}`, {
+      method: 'DELETE',
+      headers: this._checkHeaders(),
+    })
+    .then(this._checkResponse)
+  }
 
-getSavedFilms() {
-  const token = localStorage.getItem('token')
-  return fetch(`${this._baseUrl}/movies`, {
-    headers: {
-      authorization: token,
-      "Content-Type": "application/json"
-    },
-  })
-  .then(this._getResponseData)
-    .catch(err => console.log(err))
-}
+  saveMovie(body) {
+    return fetch(`${this._url}/movies`, {
+      method: 'POST',
+      headers: this._checkHeaders(),
+      body: JSON.stringify(body)
 
-deleteMovie(cardId) {
-  const token = localStorage.getItem('token')
-  return fetch(`${this._baseUrl}/movies/${cardId}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: `${token}`,
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(this._getResponseData);
-}}
+    })
+    .then(this._checkResponse)
+  }
 
-const newMainApi = new MainApi({
-  baseUrl:  "http://localhost:3000",
-  //"https://api.mesto.xenyanemkina.nomoredomains.rocks",
-});
+  logOut() {
+    return fetch(`${this._url}/signout`, {
+      method: 'POST',
+      headers: this._headers
+    })
+    .then(this._checkResponse)
+  }
+};
 
-export default newMainApi;
+export const newMainApi = new MainApi(MY_API_URL);

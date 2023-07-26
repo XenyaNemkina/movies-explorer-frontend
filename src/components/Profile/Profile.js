@@ -3,22 +3,16 @@ import "./Profile.css";
 import Header from "../Header/Header";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function Profile({ onSubmit }) {
-  const [formValue, setFormValue] = useState({
-    name: "",
-    email: "",
-  });
-  const currentUser = React.useContext(CurrentUserContext);
-  const [isError, setIsError] = useState("");
-  const [isUpdateMode, setIsUpdateMode] = useState("true");
+function Profile({ onSubmit, currentUser }) {
+  const [name,setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [error, setError] = useState("");
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const handleSubmit = (evt) => {
-    evt.preventDefault();
-    if (!formValue.name || !formValue.email) {
-      return;
-    }
-    onSubmit(formValue.name, formValue.email, formValue.password);
-    setFormValue({ name: "", email: "" });
+
   };
 
   function switchUpdateMode(evt) {
@@ -27,28 +21,29 @@ function Profile({ onSubmit }) {
   }
 
   const handleChange = (evt) => {
-    const value = evt.target.value;
-    const name = evt.target.name;
-    setFormValue({ ...formValue, [name]: value });
-    if (!evt.target.value) {
-      setIsError("Что-то пошло не так...");
-    }
+ 
   };
 
   return (
     <>
       <Header />
       <main className="profile">
-        <h2 className="profile__hello">Привет, Виталий!</h2>
+        <h2 className="profile__hello">Привет, {currentUser.name}!</h2>
         <form className="profile__form" onSubmit={handleSubmit}>
           <div className="profile__content">
             <p className="profile__subtitle">Имя</p>
-            <input className="profile__field" type="text" placeholder="Виталий" name="name" value={formValue.name} onChange={handleChange} required />
+            <div className="profile__fieldset">
+              <input className="profile__field" type="text" placeholder="Виталий" name="name" value={name || currentUser.name} onChange={handleChange} required disabled={!isUpdateMode} />
+              <span className="profile__error"></span>
+            </div>
           </div>
           <div className="profile__content">
             <p className="profile__subtitle">E-mail</p>
-            <input className="profile__field" type="email" name="email" placeholder="pochta@yandex.ru" value={formValue.email} autoComplete="off" onChange={handleChange} required />
-          </div>
+            <div className="profile__fieldset">
+            <input className="profile__field" type="email" name="email" placeholder="pochta@yandex.ru" value={email || currentUser.email} autoComplete="off" onChange={handleChange} required disabled={!isUpdateMode} />
+              <span className="profile__error"></span>
+            </div>
+           </div>
           {!isUpdateMode && (
             <>
               <button className="profile__btn link" type="button" onClick={switchUpdateMode}>
@@ -61,7 +56,7 @@ function Profile({ onSubmit }) {
           )}
           {isUpdateMode && (
             <>
-              <span className="profile__field_error profile__field_error_active">{isError}</span>
+              <span className="profile__field_error profile__field_error_active">{error}</span>
               <button className="profile_savebtn link" type="submit" onClick={switchUpdateMode} onSubmit={handleSubmit}>
                 Сохранить
               </button>

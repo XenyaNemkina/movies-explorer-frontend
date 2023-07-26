@@ -10,7 +10,7 @@ import Profile from "../Profile/Profile";
 import SavedMovies from "../SavedMovies/SavedMovies";
 import NotFound from "../NotFound/NotFound";
 import BurgerMenu from "../BurgerMenu/BurgerMenu";
-import newMainApi from "../../utils/MainApi";
+import { newMainApi } from "../../utils/MainApi";
 import moviesApi from "../../utils/MoviesApi";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
@@ -33,62 +33,80 @@ function App() {
   const [text, setText] = useState('')
   const navigate = useNavigate();
 
-  const handleSetUserData = useCallback(async () => {
-    setIsLoaderActive(true);
-    try {
-      const user = await newMainApi.getUserInfo();
-      if(user) {
-        setCurrentUser(user);
-        setIsLoggedIn(true);
-      }
-    } catch (err) {
-      console.log(`Ошибка вывода данных юзера: ${err}`)
-    } finally {
-      setIsLoaderActive(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleSetUserData();
-  },[handleSetUserData]);
-
-  function handleLogin(email, password) {
-    setIsLoaderActive(true);
-    return newMainApi.authorization(email, password)
-      .then((userData) => {
-        setCurrentUser(userData);
-        setIsLoggedIn(true);
-        navigate('/movies', {replace: true})
+    //Регистрация пользователя
+    async function handleRegister(name, email, password) {
+      setIsLoaderActive(true);
+      try {
+        const user = await newMainApi.register(name, email, password);
+        console.log(user);
+        if(user) {
+          const auth = await handleLogin(email, password);
+          setCurrentUser(user);
+          console.log(user);
+          setIsLoggedIn(true);
+          navigate('/movies', {replace: true})
         }
-      )
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        setIsLoaderActive(false)
-      })}
+      } catch (err) {
+          setErrorAuth(err);
+          console.log(err);
+        } finally {
+          setIsLoaderActive(false)
+        }
+    }
   
+    //Логин
+    async function handleLogin(email, password) {
+      setIsLoaderActive(true);
+      try {
+        const user = await newMainApi.login(email, password);
+        console.log(user)
+        if(user) {
+            setCurrentUser(user);
+            setIsLoggedIn(true);
+            navigate('/movies', {replace: true});
+          }
+        } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoaderActive(false);
+      }
+    }
 
-  function handleRegister(name, email, password) {
-    setIsLoaderActive(true);
-    return newMainApi.register(name, email, password)
-      .then(()=> 
-        navigate("/signin", { replace: true })
-      )
-      .catch((err) => {
-        setErrorAuth(err)
-      })
-      .finally(() => {
-        setIsLoaderActive(false)
-      })
-    };
+    const handleSetUserData = useCallback(async () => {
+      setIsLoaderActive(true);
+      try {
+        const user = await newMainApi.getUserInfo();
+        if(user) {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+          navigate('/movies', {replace: true});
+        }
+      } catch (err) {
+        console.log(`Ошибка вывода данных юзера: ${err}`)
+      } finally {
+        setIsLoaderActive(false);
+      }
+    }, []);
+  
+    useEffect(() => {
+      handleSetUserData();
+    },[handleSetUserData]);
 
-    
-  function handleLogout() {
-    localStorage.clear()
-    setIsLoggedIn(false)
-    navigate("/")
-  }
+    //Выход из профиля и обнуление стейтов
+    async function handleLogout() {
+      setIsLoaderActive(true);
+      try {
+        await newMainApi.logOut();
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        localStorage.clear();
+        navigate('/', {replace: true});
+      } catch(err) {
+        console.log(`Ошибка с выходом из аккаунта: ${err}`)
+      } finally {
+        setIsLoaderActive(false);
+      }
+    }
   
 /* !!! */
   function findAllMovies(evt, value) {
@@ -202,7 +220,7 @@ function App() {
             isLoggedIn? <Navigate to='/'/> : <Login errorAuth={errorAuth} onSubmit = {handleLogin}/>} />
           <Route path="/signup" element=
            {isLoggedIn? <Navigate to='/'/> : <Register errorAuth={errorAuth} onSubmit={handleRegister}/>} />
-            <Route path="/profile" element={<ProtectedRoute isLoggedIn={isLoggedIn}><Profile errorAuth={errorAuth} onLogout={handleLogout}/></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute isLoggedIn={isLoggedIn}><Profile currentUser={currentUser} errorAuth={errorAuth} onLogout={handleLogout}/></ProtectedRoute>} />
             <Route path="/movies" element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Header onBurgerClick={handleBurger} />
