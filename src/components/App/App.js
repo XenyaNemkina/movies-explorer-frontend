@@ -23,7 +23,7 @@ function App() {
   const [infoMessage, setInfoMessage] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState({});
   const [errorAuth, setErrorAuth] = useState('');
   const [movies, setMovies] = useState([]);
   const [errorMovies, setErrorMovies] = useState('');
@@ -33,64 +33,74 @@ function App() {
   const [text, setText] = useState('')
   const navigate = useNavigate();
 
-    //Регистрация пользователя
-    async function handleRegister(name, email, password) {
-      setIsLoaderActive(true);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(token && !isLoggedIn) {
+      handleTokenCheck(token);
+    };
+  });
+
+  const handleTokenCheck = (token) => {
+    newMainApi.checkToken(token)
+      .then((data) => {
+        setIsLoggedIn(true);
+        navigate('/movies', {replace: true});
+      })
+      .catch((err) =>{
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const user = await newMainApi.register(name, email, password);
-        console.log(user);
-        if(user) {
-          setCurrentUser(user);
-          console.log(user);
-          setIsLoggedIn(true);
-          navigate('/signin', {replace: true})
+        if (isLoggedIn) {
+          const token = localStorage.getItem("token");
+          const userData = await newMainApi.getUserInfo(token);
+          setCurrentUser(userData);
         }
       } catch (err) {
-          setErrorAuth(err);
-          console.log(err);
-        } finally {
-          setIsLoaderActive(false)
-        }
-    }
-  
-    //Логин
-    async function handleLogin(email, password) {
-      setIsLoaderActive(true);
-      try {
-        const user = await newMainApi.login(email, password);
-        if(user) {
-            console.log(user)
-            console.log(currentUser);
-            setIsLoggedIn(true);
-            navigate('/movies', {replace: true});
-          }
-        } catch (err) {
         console.log(err);
-      } finally {
-        setIsLoaderActive(false);
       }
+    };
+
+    fetchData();
+  }, [isLoggedIn]);
+
+  async function handleLogin(email, password) {
+    try {
+      const data = await newMainApi.authorization(email, password);
+      localStorage.setItem('token', data.token);
+      setIsLoggedIn(true);
+      navigate('/movies', { replace: true });
+     } catch (err) {
+      console.log(err);
     }
-
-    const handleSetUserData = useCallback(async () => {
-      setIsLoaderActive(true);
-      try {
-        const user = await newMainApi.getUserInfo();
-        if(user) {
-          setCurrentUser(user);
-          setIsLoggedIn(true);
-          navigate('/movies', {replace: true});
-        }
-      } catch (err) {
-        console.log(`Ошибка вывода данных юзера: ${err}`)
-      } finally {
-        setIsLoaderActive(false);
       }
-    }, []);
-  
-    useEffect(() => {
-      handleSetUserData();
-    },[handleSetUserData]);
 
+      async function handleRegister(name, email, password) {
+        try {
+          await newMainApi.register(name, email, password);
+          navigate("/signin", { replace: true });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+      function handleUpdateUser(userData) {
+        setIsLoaderActive(true);
+        newMainApi
+          .setUserInfo(userData)
+          .then((data) => {
+            setCurrentUser(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            setIsLoaderActive(false);
+          });
+      }
     //Выход из профиля и обнуление стейтов
     async function handleLogout() {
       setIsLoaderActive(true);
@@ -219,7 +229,7 @@ function App() {
             isLoggedIn? <Navigate to='/'/> : <Login errorAuth={errorAuth} onSubmit = {handleLogin}/>} />
           <Route path="/signup" element=
            {isLoggedIn? <Navigate to='/'/> : <Register errorAuth={errorAuth} onSubmit={handleRegister}/>} />
-            <Route path="/profile" element={<ProtectedRoute isLoggedIn={isLoggedIn}><Profile currentUser={currentUser} errorAuth={errorAuth} onLogout={handleLogout}/></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute isLoggedIn={isLoggedIn}><Profile currentUser={currentUser}  onUpdateUser={handleUpdateUser}  errorAuth={errorAuth} onLogout={handleLogout}/></ProtectedRoute>} />
             <Route path="/movies" element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Header onBurgerClick={handleBurger} />

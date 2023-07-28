@@ -3,7 +3,7 @@ import "./Profile.css";
 import Header from "../Header/Header";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function Profile({ onUpdateUser, errorAuth,  }) {
+function Profile({ onUpdateUser, errorAuth, onLogout }) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name,setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +19,6 @@ function Profile({ onUpdateUser, errorAuth,  }) {
 
   function handleSubmit(evt) {
     evt.preventDefault()
-      console.log("tut ya")
       onUpdateUser({
         name: name,
         email: email,
@@ -90,7 +89,7 @@ function Profile({ onUpdateUser, errorAuth,  }) {
               <button className="profile__btn link" type="button" onClick={switchUpdateMode}>
                 Редактировать
               </button>
-              <button className="profile__signoutbtn link" type="button">
+              <button className="profile__signoutbtn link" type="button" onClick={onLogout}>
                 Выйти из аккаунта
               </button>
             </>
