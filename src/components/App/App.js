@@ -23,7 +23,7 @@ function App() {
   const [infoMessage, setInfoMessage] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState();
   const [errorAuth, setErrorAuth] = useState('');
   const [movies, setMovies] = useState([]);
   const [errorMovies, setErrorMovies] = useState('');
@@ -40,11 +40,10 @@ function App() {
         const user = await newMainApi.register(name, email, password);
         console.log(user);
         if(user) {
-          const auth = await handleLogin(email, password);
           setCurrentUser(user);
           console.log(user);
           setIsLoggedIn(true);
-          navigate('/movies', {replace: true})
+          navigate('/signin', {replace: true})
         }
       } catch (err) {
           setErrorAuth(err);
@@ -59,9 +58,9 @@ function App() {
       setIsLoaderActive(true);
       try {
         const user = await newMainApi.login(email, password);
-        console.log(user)
         if(user) {
-            setCurrentUser(user);
+            console.log(user)
+            console.log(currentUser);
             setIsLoggedIn(true);
             navigate('/movies', {replace: true});
           }

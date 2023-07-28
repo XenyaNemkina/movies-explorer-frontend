@@ -7,17 +7,14 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie}) {
   const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
   let windowWidth = useWindowDimensions().width
   let rowNumber
-  if(windowWidth<700){
+  if(windowWidth<757){
     rowNumber = 5
   }
-  else if(windowWidth>=700 && windowWidth<850){
-    rowNumber = 2
-  }
-  else if(windowWidth>=850 && windowWidth<1140){
-    rowNumber = 3
+  else if(windowWidth>=757 && windowWidth<1161){
+    rowNumber = 8
   }
   else {
-    rowNumber = 4
+    rowNumber = 12
   }
 
   if (+numberOfMoviesDisplayed < 4){

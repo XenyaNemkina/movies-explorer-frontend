@@ -48,6 +48,7 @@ class MainApi {
     .then((data) => {
       if (data.token){
         localStorage.setItem('token', data.token);
+        console.log(data)
         return data;
       }
     })
@@ -58,14 +59,6 @@ class MainApi {
     this._headers.authorization = `Bearer ${this._token}`;
     return this._headers;
   };
-
-  getUserInfo() {
-    return fetch(`${this._url}/users/me`, {
-      headers: this._checkHeaders(),
-    })
-    .then(this._checkResponse)
-  }
-
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
