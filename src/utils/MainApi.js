@@ -82,13 +82,61 @@ class MainApi {
       return this._getResponseData(res);
     }
 
-  getSavedMovies() {
-    return fetch(`${this._url}/movies`, {
-      headers: this._checkHeaders(),
-    })
-    .then(this._checkResponse)
-  }
+    async postMovie(data) {
+      let {
+        country,
+        director,
+        duration,
+        year,
+        description,
+        image,
+        trailerLink,
+        nameRU,
+        nameEN,
+        id,
+      } = data
+    
+      const jwt = localStorage.getItem('jwt')
+      const res = await fetch(`${this._baseUrl}/movies`, {
+        method: 'POST',
+        headers: {
+          authorization: jwt,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+          {
+            country: country || 'NoSelected',
+            director: director || 'NoSelected',
+            duration,
+            year,
+            description,
+            image: `https://api.nomoreparties.co${image.url}`,
+            trailerLink,
+            nameRU,
+            nameEN,
+            thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
+            movieId: id,
+          }
+        )
+      });
+      return this._getResponseData(res);
+    }
 
+    async getSavedMovies() {
+      const jwt = localStorage.getItem('jwt')
+      try {
+        const res = await fetch(`${this._baseUrl}/movies`, {
+          headers: {
+            authorization: jwt,
+            "Content-Type": "application/json"
+          },
+        });
+        return this._getResponseData(res);
+      } catch (err) {
+        return console.log(err);
+      }
+    }
+    
   deleteMovie(id) {
     return fetch(`${this._url}/movies/${id}`, {
       method: 'DELETE',

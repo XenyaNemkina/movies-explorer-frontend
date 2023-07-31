@@ -80,9 +80,13 @@ function App() {
 
       async function handleRegister(name, email, password) {
         try {
-          await newMainApi.register(name, email, password);
-          navigate("/signin", { replace: true });
-        } catch (err) {
+        const user = await newMainApi.register(name, email, password);
+          if(user) {
+          const auth = await handleLogin(email, password);
+          setCurrentUser(user);
+          setIsLoggedIn(true);  
+          navigate("/movies", { replace: true });
+        }} catch (err) {
           console.log(err);
         }
       }
@@ -188,7 +192,8 @@ function App() {
   function saveMovie(id) {
     setIsLoaderActive(true)
     const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === id)[0]
-    newMainApi.postMovie(targetFilm).then(res => {
+    newMainApi.postMovie(targetFilm)
+    .then(res => {
       newMainApi.getSavedFilms()
         .then(res => {
           let movieWithOwner = res.filter(el => el.owner === currentUser._id)
