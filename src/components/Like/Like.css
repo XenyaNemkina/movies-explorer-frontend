@@ -5,7 +5,7 @@
   border-radius: 30px;
   border: none;
   background-position: center;
-  margin: 9px 0 0;
+  margin: 14px 0;
 }
 
 .moviesCard__btn_saved {
@@ -18,7 +18,6 @@
   background-color: #f9f9f9;
   border-radius: 30px;
   border: none;
-  margin: 18px 0 0;
   background-image: url(../../images/deletebtn.png);
   background-position: center;
 }

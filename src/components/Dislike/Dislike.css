@@ -1,16 +1,7 @@
-.moviesCard__btn {
-  width: 100px;
-  height: 29px;
-  background-image: url(../../images/save.png);
-  border-radius: 30px;
-  border: none;
-  background-position: center;
-  margin: 9px 0 0;
-}
-
 .moviesCard__btn_delete {
   width: 100px;
   height: 29px;
+  margin: 14px;
   background-color: #f9f9f9;
   border-radius: 30px;
   border: none;
@@ -20,6 +11,6 @@
 
 @media screen and (max-width: 500px) {
   .moviesCard__btn {
-    margin: 14px 0;
+    margin: 9px 0;
   }
 }

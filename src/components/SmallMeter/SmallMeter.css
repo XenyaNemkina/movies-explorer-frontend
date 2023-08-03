@@ -1,45 +1,77 @@
-.searchform__filter {
-  align-self: center;
-  border: none;
-  margin-bottom: 75px;
-  min-width: 126px;
-  height: 20px;
-  padding: 0;
-}
 .searchform__checkbox {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  cursor: pointer;
+  margin: 0 12px 0 30px;
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background-color: #ebebeb;
+  border: 1px solid #ebebeb;
+  border-radius: 20px;
+  z-index: 1;
 }
+
+.searchform__filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchform__checkbox::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  transition: all 0.4s;
+}
+
+.searchform__checkbox_checked {
+  background-color: #2be080;
+  border: 1px solid #2be080;
+}
+
+.searchform__checkbox_checked::before {
+  background-color: #fff;
+  transform: translateX(15px);
+}
+
 .searchform__text {
   font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  font-weight: 400;
-  position: relative;
-  cursor: pointer;
-  margin: 0;
+  color: #000;
+  margin-right: 30px;
 }
-.searchform__text::before {
-  content: "";
-  position: absolute;
-  transform: translateY(-50%);
-  top: 50%;
-  background-color: #2be080;
-  border-radius: 20px;
-  height: 20px;
-  width: 36px;
-  right: 140px;
+
+@media screen and (max-width: 768px) {
+  .searchform__text {
+    margin-right: 20px;
+  }
+
+  .searchform__checkbox {
+    margin-left: 22px;
+  }
 }
-.searchform__text::after {
-  content: "";
-  position: absolute;
-  transform: translateY(-50%);
-  top: 50%;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
-  border-radius: 50%;
-  height: 14px;
-  right: 142px;
-  width: 14px;
+
+@media screen and (max-width: 410px) {
+  .searchform__filter {
+    margin: 33px auto 7px auto;
+  }
+
+  .searchform__text {
+    font-size: 11px;
+    line-height: 18px;
+    margin-right: 0;
+  }
+
+  .searchform__checkbox {
+    width: 36px;
+    margin-left: 0;
+    margin-right: 10px;
+  }
 }

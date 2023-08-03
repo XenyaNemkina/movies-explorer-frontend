@@ -5,11 +5,10 @@ import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 function Profile({ onUpdateUser, errorAuth, onLogout }) {
   const currentUser = React.useContext(CurrentUserContext);
-  const [name,setName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [error, setError] = useState("");
   const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   useEffect(() => {
@@ -18,12 +17,11 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
   }, [currentUser]);
 
   function handleSubmit(evt) {
-    evt.preventDefault()
-      onUpdateUser({
-        name: name,
-        email: email,
-      });
-    
+    evt.preventDefault();
+    onUpdateUser({
+      name: name,
+      email: email,
+    });
   }
 
   function isValidEmail(email) {
@@ -32,12 +30,12 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
 
   function handleChangeName(evt) {
     setName(evt.target.value);
-    if(evt.target.name === "name" && evt.target.validity.patternMismatch) {
-      setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис")
-    } else if(evt.target.name === "name" && evt.target.validationMessage) {
+    if (evt.target.name === "name" && evt.target.validity.patternMismatch) {
+      setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис");
+    } else if (evt.target.name === "name" && evt.target.validationMessage) {
       setNameError(evt.target.validationMessage);
-      if(!evt.target.value) {
-        setNameError("Заполните поле")
+      if (!evt.target.value) {
+        setNameError("Заполните поле");
       }
     } else {
       setNameError("");
@@ -46,12 +44,12 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
 
   function handleChangeEmail(evt) {
     setEmail(evt.target.value);
-    if(evt.target.name === "email" && !isValidEmail(evt.target.value)) {
+    if (evt.target.name === "email" && !isValidEmail(evt.target.value)) {
       setEmailError("Необходимо ввести адрес почты");
-    } else if(evt.target.name === "email" && !evt.target.validity.valid) {
+    } else if (evt.target.name === "email" && !evt.target.validity.valid) {
       setEmailError(evt.target.validationMessage);
-      if(!evt.target.value) {
-        setEmailError("Заполните поле")
+      if (!evt.target.value) {
+        setEmailError("Заполните поле");
       }
     } else {
       setEmailError("");
@@ -73,19 +71,19 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
             <p className="profile__subtitle">Имя</p>
             <div className="profile__fieldset">
               <input className="profile__field" type="text" placeholder="Виталий" name="name" value={name || ""} onChange={handleChangeName} required disabled={!isUpdateMode} />
-              <span className={`profile__field_error ${(nameError) && `profile__field_error_active`}`}>{nameError}</span>
+              <span className={`profile__field_error ${nameError && `profile__field_error_active`}`}>{nameError}</span>
             </div>
           </div>
           <div className="profile__content">
             <p className="profile__subtitle">E-mail</p>
             <div className="profile__fieldset">
-            <input className="profile__field" type="email" name="email" placeholder="pochta@yandex.ru" value={email || ""} autoComplete="off" onChange={handleChangeEmail} required disabled={!isUpdateMode} />
-              <span className={`profile__field_error ${(emailError) && `profile__field_error_active`}`}>{emailError}</span>
+              <input className="profile__field" type="email" name="email" placeholder="pochta@yandex.ru" value={email || ""} autoComplete="off" onChange={handleChangeEmail} required disabled={!isUpdateMode} />
+              <span className={`profile__field_error ${emailError && `profile__field_error_active`}`}>{emailError}</span>
             </div>
-           </div>
+          </div>
           {!isUpdateMode && (
             <>
-              <span className="profile__error">{error}</span> 
+              <span className="profile__error">{errorAuth}</span>
               <button className="profile__btn link" type="button" onClick={switchUpdateMode}>
                 Редактировать
               </button>

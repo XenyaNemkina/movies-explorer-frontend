@@ -1,9 +1,7 @@
-import './Dislike.css';
+import "./Dislike.css";
 
-function Dislike({deleteMovie}) {
-  return (
-    <button type="button" className="moviesCard__btn_delete link" onClick={deleteMovie}/>
-  )
+function Dislike({ delMovie }) {
+  return <button type="button" className="moviesCard__btn_delete link" onClick={delMovie} />;
 }
 
 export default Dislike;

@@ -81,8 +81,8 @@
 
 .login__savebtn_disabled {
   border: 1px solid #e8e8e8;
-  background-color: #e8e8e8; 
-  color: #AAA;
+  background-color: #e8e8e8;
+  color: #aaa;
   pointer-events: none;
 }
 

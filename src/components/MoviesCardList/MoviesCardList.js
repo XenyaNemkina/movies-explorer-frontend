@@ -1,7 +1,7 @@
-import MoviesCard from '../MoviesCard/MoviesCard'
-import './MoviesCardList.css'
+import MoviesCard from '../MoviesCard/MoviesCard';
+import './MoviesCardList.css';
 import {useEffect, useState} from "react";
-import useWindowDimensions from '../../utils/changeWindow'
+import useWindowDimensions from '../../utils/changeWindow';
 
 function MoviesCardList({ isSaved, saveMovie, deleteMovie}) {
   const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
@@ -16,6 +16,17 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie}) {
   else {
     rowNumber = 12
   }
+
+let addMovieRow
+if(windowWidth<757){
+  addMovieRow = 2
+}
+else if(windowWidth>=757 && windowWidth<1161){
+  addMovieRow = 2
+}
+else {
+  addMovieRow = 3
+}
 
   if (+numberOfMoviesDisplayed < 4){
     localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
@@ -35,8 +46,8 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie}) {
   const [buttonVisible, setButtonVisible] = useState(false)
 
   function renderLimiter(value= 0) {
-    setLimitCoin((prev)=> prev + rowNumber)
-    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + rowNumber).toString())
+    setLimitCoin((prev)=> prev + addMovieRow)
+    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + addMovieRow).toString())
   }
 
   function disableButton(value){

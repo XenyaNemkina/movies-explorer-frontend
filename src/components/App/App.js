@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import './App.css';
 import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
@@ -20,13 +20,10 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function App() {
   const [isBurger, setIsBurger] = useState(false);
-  const [infoMessage, setInfoMessage] = React.useState(null);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [errorAuth, setErrorAuth] = useState('');
-  const [movies, setMovies] = useState([]);
-  const [errorMovies, setErrorMovies] = useState('');
   const [toggleSmallMeter, setToggleSmallMeter] = useState(false)
   const [reactionsOnSearch, setReactionsOnSearch] = useState(false)
   const [research, setReSearch] = useState(false);
@@ -47,7 +44,7 @@ function App() {
         navigate('/movies', {replace: true});
       })
       .catch((err) =>{
-        console.log(err)
+        setErrorAuth(err)
       })
   }
 
@@ -60,7 +57,7 @@ function App() {
           setCurrentUser(userData);
         }
       } catch (err) {
-        console.log(err);
+        setErrorAuth(err);
       }
     };
 
@@ -74,7 +71,7 @@ function App() {
       setIsLoggedIn(true);
       navigate('/movies', { replace: true });
      } catch (err) {
-      console.log(err);
+      setErrorAuth(err);
     }
       }
 
@@ -87,7 +84,7 @@ function App() {
           setIsLoggedIn(true);  
           navigate("/movies", { replace: true });
         }} catch (err) {
-          console.log(err);
+          setErrorAuth(err);
         }
       }
 
@@ -99,7 +96,7 @@ function App() {
             setCurrentUser(data);
           })
           .catch((err) => {
-            console.log(err);
+            setErrorAuth(err);
           })
           .finally(() => {
             setIsLoaderActive(false);
@@ -115,46 +112,49 @@ function App() {
         localStorage.clear();
         navigate('/', {replace: true});
       } catch(err) {
-        console.log(`Ошибка с выходом из аккаунта: ${err}`)
+        setErrorAuth(`Ошибка с выходом из аккаунта: ${err}`)
       } finally {
         setIsLoaderActive(false);
       }
     }
   
 /* !!! */
-  function findAllMovies(evt, value) {
-    setIsLoaderActive(true)
-    evt.preventDefault()
-    if(!value){
-      setIsLoaderActive(false)
-      setText('Введите значение.')
+function findAllMovies(evt, value) {
+  setIsLoaderActive(true)
+  evt.preventDefault()
+  if(!value){
+    setIsLoaderActive(false)
+    setText('Введите значение.')
+    return null
+  }
+  value = value.toLowerCase()
+  moviesApi.getMovies()
+  .then(res => {
+    let list = res.filter(el => el.nameRU.toLowerCase().includes(value))
+    if( list.length === 0 ){
+      setText('Ничего не найдено.')
+      console.log('this it')
       return null
     }
-    value = value.toLowerCase()
-    moviesApi.getMovies()
-    .then(res => {
-      let list = res.filter(el => el.nameRU.toLowerCase().includes(value))
-      if( list.length === 0 ){
-        setText('Ничего не найдено.')
-        console.log('this it')
-        return null
-      }
-      const IsSmallMeter = localStorage.getItem('smallMeter')
-      if(IsSmallMeter === 'false'){
-        localStorage.setItem('findList', JSON.stringify(list))
-        localStorage.setItem('valueInput', value)
-        localStorage.setItem('numberOfMoviesDisplayed', '0')
-        setReactionsOnSearch(!reactionsOnSearch)
-      }else{
-        list = list.filter(el => el.duration < 40)
-        localStorage.setItem('findList', JSON.stringify(list))
-        localStorage.setItem('valueInput', value)
-        localStorage.setItem('numberOfMoviesDisplayed', '0')
-        setReactionsOnSearch(!reactionsOnSearch)
-      }
-      refresh()
-    })
-      .catch(err => console.log(err))
+    const IsSmallMeter = localStorage.getItem('smallMeter')
+    if(IsSmallMeter === 'false'){
+      localStorage.setItem('findList', JSON.stringify(list))
+      localStorage.setItem('valueInput', value)
+      localStorage.setItem('numberOfMoviesDisplayed', '0')
+      setReactionsOnSearch(!reactionsOnSearch)
+    }else{
+      list = list.filter(el => el.duration < 40)
+      localStorage.setItem('findList', JSON.stringify(list))
+      localStorage.setItem('valueInput', value)
+      localStorage.setItem('numberOfMoviesDisplayed', '0')
+      setReactionsOnSearch(!reactionsOnSearch)
+    }
+    refresh()
+  })
+      .catch(err => 
+        console.log(err),
+      //  setText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
+      )
       .finally(() => setIsLoaderActive(false))
   }
 
@@ -163,7 +163,6 @@ function App() {
     value = value.toLowerCase()
     localStorage.setItem('valueInputSavedMovies', value)
     const saveMovies = JSON.parse(localStorage.getItem('savedMoviesList'))
-
     const IsSmallMeter = localStorage.getItem('smallMeter')
     let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
     if(IsSmallMeter === 'false'){
@@ -194,10 +193,11 @@ function App() {
     const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === id)[0]
     newMainApi.postMovie(targetFilm)
     .then(res => {
-      newMainApi.getSavedFilms()
+      newMainApi.getSavedMovies()
         .then(res => {
           let movieWithOwner = res.filter(el => el.owner === currentUser._id)
           if(!movieWithOwner){
+            setText('Ничего не найдено')
           }else{
             localStorage.setItem('savedMoviesList', JSON.stringify(movieWithOwner))
           }
@@ -207,12 +207,12 @@ function App() {
     })
   }
 
-  function deleteMovie(cardId) {
+  function deleteMovie(movieId) {
     setIsLoaderActive(true)
-    deleteMovie(cardId)
+    newMainApi.deleteMovie(movieId)
       .then(res => {
         const listBeforeDelete = JSON.parse(localStorage.getItem('savedMoviesList'))
-        const listWithDelete = listBeforeDelete.filter(el => el._id !== cardId)
+        const listWithDelete = listBeforeDelete.filter(el => el._id !== movieId)
         localStorage.setItem('savedMoviesList', JSON.stringify(listWithDelete))
       })
       .catch(err => console.log(err))
@@ -243,7 +243,8 @@ function App() {
                  handleSmallMetr={handleSmallMetr}
                  toggleSmallMeter={toggleSmallMeter}
                  saveMovie={saveMovie}
-                 deleteMovie={deleteMovie} />
+                 deleteMovie={deleteMovie}
+                 text={text} />
               <Footer />
             </ProtectedRoute>} />
             <Route path="/saved-movies" element={
@@ -253,7 +254,8 @@ function App() {
                   findMovies={findSavedMovies}
                   handleSmallMetr={ handleSmallMetr }
                   toggleSmallMeter={toggleSmallMeter}
-                  deleteMovie={deleteMovie} /> 
+                  deleteMovie={deleteMovie}
+                  text={text} /> 
                 <Footer />
               </ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
