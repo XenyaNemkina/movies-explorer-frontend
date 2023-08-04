@@ -136,8 +136,8 @@ function findAllMovies(evt, value) {
       console.log('this it')
       return null
     }
-    const IsSmallMeter = localStorage.getItem('smallMeter')
-    if(IsSmallMeter === 'false'){
+    const isSmallMeter = localStorage.getItem('smallMeter')
+    if(isSmallMeter === 'false'){
       localStorage.setItem('findList', JSON.stringify(list))
       localStorage.setItem('valueInput', value)
       localStorage.setItem('numberOfMoviesDisplayed', '0')
@@ -152,11 +152,9 @@ function findAllMovies(evt, value) {
     }
     refresh()
   })
-      .catch(err => 
-        console.log(err),
-        console.log('this it2'),
+      .catch(err => {
         setText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
-      )
+})
       .finally(() => setIsLoaderActive(false))
   }
 
@@ -165,9 +163,9 @@ function findAllMovies(evt, value) {
     value = value.toLowerCase()
     localStorage.setItem('valueInputSavedMovies', value)
     const saveMovies = JSON.parse(localStorage.getItem('savedMoviesListNew'))
-    const IsSmallMeter = localStorage.getItem('smallMeter')
+    const isSmallMeter = localStorage.getItem('smallMeter')
     let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
-    if(IsSmallMeter === 'false'){
+    if(isSmallMeter === 'false'){
       localStorage.setItem('SavedMovielistMatchInput', JSON.stringify(list))
       setReactionsOnSearch(!reactionsOnSearch)
     }else{
