@@ -54,7 +54,7 @@
 }
 
 .profile__field::placeholder {
-  color: black;
+  color: #AAA;
 }
 
 .profile__field_error {
@@ -91,7 +91,7 @@
 }
 
 .profile__btn {
-  margin: 220px 0 0;
+  margin: 134px 0 0;
   border: none;
   background-color: transparent;
   font-size: 13px;
@@ -109,6 +109,13 @@
   font-size: 14px;
   font-weight: 500;
   margin: 20px 0 16px;
+}
+
+.profile_savebtn_disabled {
+  border: 1px solid #e8e8e8;
+  background-color: #e8e8e8;
+  color: #aaa;
+  pointer-events: none;
 }
 
 .profile__signoutbtn {

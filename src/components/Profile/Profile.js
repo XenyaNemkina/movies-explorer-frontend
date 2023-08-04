@@ -95,7 +95,7 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
           {isUpdateMode && (
             <>
               <span className="profile__submit_error profile__submit_error_active">{errorAuth}</span>
-              <button className="profile_savebtn link" type="submit" onClick={handleSubmit}>
+              <button className={`profile_savebtn link ${(emailError || nameError) && `profile_savebtn_disabled`}`} type="submit" disabled={emailError || nameError} onClick={handleSubmit}>
                 Сохранить
               </button>
             </>

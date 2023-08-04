@@ -27,10 +27,10 @@ function App() {
   const [toggleSmallMeter, setToggleSmallMeter] = useState(false)
   const [reactionsOnSearch, setReactionsOnSearch] = useState(false)
   const [research, setReSearch] = useState(false);
-  const [text, setText] = useState('')
+  const [text, setText] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /* useEffect(() => {
     const token = localStorage.getItem("token");
     if(token && !isLoggedIn) {
       handleTokenCheck(token);
@@ -62,13 +62,42 @@ function App() {
     };
 
     fetchData();
-  }, [isLoggedIn]);
+  }, [isLoggedIn]);*/ 
 
-  async function handleLogin(email, password) {
+  useEffect(()=> {
+    const token = localStorage.getItem('token')
+    if (token) {
+      newMainApi.getUserInfo(token)
+        .then(user => {
+          setIsLoggedIn(true);
+          setCurrentUser(user);
+            return user
+        })
+        .then(user => {
+          newMainApi.getSavedMovies()
+          .then(res => {
+            if(!res){
+              setText('Ничего не найдено')
+            }else{
+              localStorage.setItem('savedMoviesList', JSON.stringify(res))
+              navigate('/movies', { replace: true });
+              }})
+            .catch(err => console.log(err))
+            .finally(() => setIsLoaderActive(false))
+        })
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoaderActive(false))
+    }
+
+  }, [])
+
+  
+ async function handleLogin(email, password) {
     try {
       const data = await newMainApi.authorization(email, password);
       localStorage.setItem('token', data.token);
       setIsLoggedIn(true);
+      setCurrentUser(data);
       navigate('/movies', { replace: true });
      } catch (err) {
       setErrorAuth(err);
@@ -136,14 +165,17 @@ function findAllMovies(evt, value) {
       console.log('this it')
       return null
     }
+   
     const isSmallMeter = localStorage.getItem('smallMeter')
     if(isSmallMeter === 'false'){
+      setText('')
       localStorage.setItem('findList', JSON.stringify(list))
       localStorage.setItem('valueInput', value)
       localStorage.setItem('numberOfMoviesDisplayed', '0')
       setReactionsOnSearch(!reactionsOnSearch)
-      console.log(reactionsOnSearch)
+      console.log(localStorage)
     }else{
+      setText('')
       list = list.filter(el => el.duration < 40)
       localStorage.setItem('findList', JSON.stringify(list))
       localStorage.setItem('valueInput', value)
@@ -162,7 +194,7 @@ function findAllMovies(evt, value) {
     evt.preventDefault()
     value = value.toLowerCase()
     localStorage.setItem('valueInputSavedMovies', value)
-    const saveMovies = JSON.parse(localStorage.getItem('savedMoviesListNew'))
+    const saveMovies = JSON.parse(localStorage.getItem('savedMoviesList'))
     const isSmallMeter = localStorage.getItem('smallMeter')
     let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
     if(isSmallMeter === 'false'){
