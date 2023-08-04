@@ -39,9 +39,6 @@ else {
   if(localStorage.getItem('valueInputSavedMovies')?.length){
     displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
   }
-
-
-
   const [limitCoin, setLimitCoin] = useState(Number(numberOfMoviesDisplayed))
   const [buttonVisible, setButtonVisible] = useState(false)
 

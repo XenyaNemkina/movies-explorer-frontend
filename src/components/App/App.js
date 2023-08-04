@@ -142,6 +142,7 @@ function findAllMovies(evt, value) {
       localStorage.setItem('valueInput', value)
       localStorage.setItem('numberOfMoviesDisplayed', '0')
       setReactionsOnSearch(!reactionsOnSearch)
+      console.log(reactionsOnSearch)
     }else{
       list = list.filter(el => el.duration < 40)
       localStorage.setItem('findList', JSON.stringify(list))
@@ -153,7 +154,8 @@ function findAllMovies(evt, value) {
   })
       .catch(err => 
         console.log(err),
-      //  setText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
+        console.log('this it2'),
+        setText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
       )
       .finally(() => setIsLoaderActive(false))
   }
@@ -162,7 +164,7 @@ function findAllMovies(evt, value) {
     evt.preventDefault()
     value = value.toLowerCase()
     localStorage.setItem('valueInputSavedMovies', value)
-    const saveMovies = JSON.parse(localStorage.getItem('savedMoviesList'))
+    const saveMovies = JSON.parse(localStorage.getItem('savedMoviesListNew'))
     const IsSmallMeter = localStorage.getItem('smallMeter')
     let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
     if(IsSmallMeter === 'false'){
@@ -188,18 +190,18 @@ function findAllMovies(evt, value) {
     setReSearch(!research)
   }
 
-  function saveMovie(id) {
+  function saveMovie(_id) {
     setIsLoaderActive(true)
-    const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === id)[0]
+    const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === _id)[0]
     newMainApi.postMovie(targetFilm)
     .then(res => {
+      console.log(res)
       newMainApi.getSavedMovies()
         .then(res => {
-          let movieWithOwner = res.filter(el => el.owner === currentUser._id)
-          if(!movieWithOwner){
+          if(!res){
             setText('Ничего не найдено')
           }else{
-            localStorage.setItem('savedMoviesList', JSON.stringify(movieWithOwner))
+            localStorage.setItem('savedMoviesList', JSON.stringify(res))
           }
         })
         .catch(err => console.log(err))
@@ -208,11 +210,14 @@ function findAllMovies(evt, value) {
   }
 
   function deleteMovie(movieId) {
+    console.log(movieId)
     setIsLoaderActive(true)
     newMainApi.deleteMovie(movieId)
       .then(res => {
         const listBeforeDelete = JSON.parse(localStorage.getItem('savedMoviesList'))
+        console.log(listBeforeDelete)
         const listWithDelete = listBeforeDelete.filter(el => el._id !== movieId)
+        console.log(listWithDelete)
         localStorage.setItem('savedMoviesList', JSON.stringify(listWithDelete))
       })
       .catch(err => console.log(err))
