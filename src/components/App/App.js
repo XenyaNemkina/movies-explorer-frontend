@@ -162,10 +162,8 @@ function findAllMovies(evt, value) {
     let list = res.filter(el => el.nameRU.toLowerCase().includes(value))
     if( list.length === 0 ){
       setText('Ничего не найдено.')
-      console.log('this it')
       return null
-    }
-   
+    }  
     const isSmallMeter = localStorage.getItem('smallMeter')
     if(isSmallMeter === 'false'){
       setText('')
@@ -173,7 +171,6 @@ function findAllMovies(evt, value) {
       localStorage.setItem('valueInput', value)
       localStorage.setItem('numberOfMoviesDisplayed', '0')
       setReactionsOnSearch(!reactionsOnSearch)
-      console.log(localStorage)
     }else{
       setText('')
       list = list.filter(el => el.duration < 40)
@@ -198,9 +195,11 @@ function findAllMovies(evt, value) {
     const isSmallMeter = localStorage.getItem('smallMeter')
     let list = saveMovies.filter(el => el.nameRU.toLowerCase().includes(value))
     if(isSmallMeter === 'false'){
-      localStorage.setItem('SavedMovielistMatchInput', JSON.stringify(list))
+      setText('');
+      localStorage.setItem('SavedMovieslistMatchInput', JSON.stringify(list))
       setReactionsOnSearch(!reactionsOnSearch)
     }else{
+      setText('');
       list = saveMovies.filter(el => el.duration < 40)
       localStorage.setItem('SavedMovieslistMatchInput', JSON.stringify(list))
       setReactionsOnSearch(!reactionsOnSearch)
@@ -225,7 +224,6 @@ function findAllMovies(evt, value) {
     const targetFilm = JSON.parse(localStorage.getItem('findList')).filter(el => el.id === _id)[0]
     newMainApi.postMovie(targetFilm)
     .then(res => {
-      console.log(res)
       newMainApi.getSavedMovies()
         .then(res => {
           if(!res){
@@ -240,14 +238,11 @@ function findAllMovies(evt, value) {
   }
 
   function deleteMovie(movieId) {
-    console.log(movieId)
     setIsLoaderActive(true)
     newMainApi.deleteMovie(movieId)
       .then(res => {
         const listBeforeDelete = JSON.parse(localStorage.getItem('savedMoviesList'))
-        console.log(listBeforeDelete)
         const listWithDelete = listBeforeDelete.filter(el => el._id !== movieId)
-        console.log(listWithDelete)
         localStorage.setItem('savedMoviesList', JSON.stringify(listWithDelete))
       })
       .catch(err => console.log(err))

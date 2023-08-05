@@ -1,5 +1,5 @@
 # movies-explorer-frontend
-Ссылка на проект на сервере:
+Ссылка на проект на сервере: https://movies.ksenyanemkina.nomoredomains.rocks
 
 Ссылка на макет: https://disk.yandex.ru/d/ut5t5PCYzrF8qg
 
