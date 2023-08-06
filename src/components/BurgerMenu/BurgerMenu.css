@@ -8,6 +8,7 @@
   left: 0;
   visibility: hidden;
   transition: opacity 1s, visibility 1s linear;
+  z-index: 2;
 }
 
 .burger__menu {

@@ -131,7 +131,6 @@ class MainApi {
 
 export const newMainApi = new MainApi({
   baseUrl: MY_API_URL,
-  // "https://api.mesto.xenyanemkina.nomoredomains.rocks",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
