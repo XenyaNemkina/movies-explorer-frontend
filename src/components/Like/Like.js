@@ -1,12 +1,12 @@
 import "./Like.css";
 
-function Like({ saveMovie, id, delMovie, isLike }) {
+function Like({ saveMovie, data, delMovie, isLike }) {
   const isLiked = isLike?.length ? "moviesCard__btn_saved" : "";
   function changeLike() {
     if (isLiked) {
-      delMovie(id);
+      delMovie(data);
     } else {
-      saveMovie(id);
+      saveMovie(data);
     }
   }
   return <button type="button" className={`moviesCard__btn ${isLiked} link`} onClick={changeLike} />;

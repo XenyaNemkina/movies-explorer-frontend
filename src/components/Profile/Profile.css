@@ -72,12 +72,9 @@
 }
 
 .profile__submit_error {
-  display: block;
   margin-top: 114px;
   min-height: 11px;
-}
-
-.profile__submit_error_active {
+  display: block;
   color: #ff004c;
   text-align: center;
   font-family: "Inter", Arial, sans-serif;
@@ -91,7 +88,7 @@
 }
 
 .profile__btn {
-  margin: 134px 0 0;
+  margin: 20px 0 0;
   border: none;
   background-color: transparent;
   font-size: 13px;

@@ -3,14 +3,14 @@ import "./Profile.css";
 import Header from "../Header/Header";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function Profile({ onUpdateUser, errorAuth, onLogout }) {
+function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-
+ 
   useEffect(() => {
     setName(currentUser ? currentUser.name : "Виталий");
     setEmail(currentUser ? currentUser.email : "pochta@yandex.ru");
@@ -21,7 +21,10 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
     onUpdateUser({
       name: name,
       email: email,
+
     });
+    
+  
   }
 
   function isValidEmail(email) {
@@ -34,6 +37,8 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
       setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис");
     } else if (evt.target.name === "name" && evt.target.validationMessage) {
       setNameError(evt.target.validationMessage);
+    } else if (evt.target.value === currentUser.name) {
+      setNameError("Введенные данные должны отличаться");
       if (!evt.target.value) {
         setNameError("Заполните поле");
       }
@@ -48,6 +53,8 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
       setEmailError("Необходимо ввести адрес почты");
     } else if (evt.target.name === "email" && !evt.target.validity.valid) {
       setEmailError(evt.target.validationMessage);
+    } else if (evt.target.value === currentUser.email) {
+      setEmailError("Введенные данные должны отличаться");
       if (!evt.target.value) {
         setEmailError("Заполните поле");
       }
@@ -81,9 +88,9 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
               <span className={`profile__field_error ${emailError && `profile__field_error_active`}`}>{emailError}</span>
             </div>
           </div>
+          <span className="profile__submit_error" >{errorAuth} {isSuccess}</span>
           {!isUpdateMode && (
             <>
-              <span className="profile__error">{errorAuth}</span>
               <button className="profile__btn link" type="button" onClick={switchUpdateMode}>
                 Редактировать
               </button>
@@ -94,7 +101,6 @@ function Profile({ onUpdateUser, errorAuth, onLogout }) {
           )}
           {isUpdateMode && (
             <>
-              <span className="profile__submit_error profile__submit_error_active">{errorAuth}</span>
               <button className={`profile_savebtn link ${(emailError || nameError) && `profile_savebtn_disabled`}`} type="submit" disabled={emailError || nameError} onClick={handleSubmit}>
                 Сохранить
               </button>

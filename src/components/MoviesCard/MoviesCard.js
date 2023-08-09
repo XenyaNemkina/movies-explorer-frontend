@@ -3,7 +3,7 @@ import { MOVIES_URL } from "../../utils/constants";
 import Like from "../Like/Like";
 import Dislike from "../Dislike/Dislike";
 
-function MoviesCard({ data, saveMovie, deleteMovie, isSaved, id, isLike }) {
+function MoviesCard({ data, saveMovie, deleteMovie, isSaved, isLike }) {
   let { nameRU, duration, image, trailerLink } = data;
   let timeLength = `${Math.floor(duration / 60)}ч ${duration % 60 ? (duration % 60) + "м" : ""}`;
   if (timeLength[0] === "0") {
@@ -27,7 +27,7 @@ function MoviesCard({ data, saveMovie, deleteMovie, isSaved, id, isLike }) {
       <a className="moviecard__link link" target="_blank" href={trailerLink}>
         <img className="moviesCard__img" src={image} alt="превью фильма" />
       </a>
-      {isSaved ? <Dislike delMovie={delMovie} /> : <Like saveMovie={saveMovie} id={id} delMovie={delMovie} isLike={isLike} />}
+      {isSaved ? <Dislike delMovie={delMovie} /> : <Like saveMovie={saveMovie} data={data} delMovie={delMovie} isLike={isLike} />}
     </li>
   );
 }
