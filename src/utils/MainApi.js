@@ -67,7 +67,6 @@ class MainApi {
     return this._getResponseData(res);
   }
 
-  //добавление информации о пользователе
   async setUserInfo({ name, email }) {
     const res = await fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
