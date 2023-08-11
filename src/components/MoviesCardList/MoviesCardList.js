@@ -46,6 +46,13 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
   }
 
   useEffect(() => {
+    if (!isSaved) {
+      setNumberOfMoviesDisplayed(rowNumber.toString());
+    }
+  }, [findList]);
+  
+
+  useEffect(() => {
     if (Number(localStorage.getItem("numberOfMoviesDisplayed")) === 0) {
       localStorage.setItem("numberOfMoviesDisplayed", rowNumber.toString());
       setLimitCoin(rowNumber);

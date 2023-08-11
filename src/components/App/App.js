@@ -24,6 +24,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [errorAuth, setErrorAuth] = useState("");
   const [toggleSmallMeter, setToggleSmallMeter] = useState(false);
+  const [research, setReSearch] = useState(false);
   const [text, setText] = useState("");
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState("");
@@ -118,19 +119,26 @@ function App() {
 
   /* !!! */
   async function findAllMovies() {
+    setIsLoaderActive(true);
     try {
       const moviesData = await moviesApi.getMovies();
+      localStorage.setItem("allMovies", JSON.stringify(moviesData));
+      console.log(moviesData);
       return moviesData;
     } catch (err) {
       console.log(err);
       throw err;
+    } finally {
+    setIsLoaderActive(true);
     }
   }
 
   async function filterMoviesByValue(allMovies, value) {
+    setIsLoaderActive(true);
     let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
     if (list.length === 0) {
       setText("Ничего не найдено.");
+      localStorage.setItem("findList", JSON.stringify(0));
       return null;
     }
     const isSmallMeter = localStorage.getItem("smallMeter");
@@ -146,6 +154,7 @@ function App() {
       localStorage.setItem("valueInput", value);
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     }
+    setIsLoaderActive(false);
   }
 
   async function findMovies(evt, value) {
@@ -157,6 +166,7 @@ function App() {
     setIsLoaderActive(true);
 
     const allMovies = JSON.parse(localStorage.getItem("allMovies"));
+    console.log(allMovies);
     value = value.toLowerCase();
 
     if (!allMovies) {
@@ -172,6 +182,7 @@ function App() {
       await filterMoviesByValue(allMovies, value);
       setIsLoaderActive(false);
     }
+    refresh()
   }
 
   function findSavedMovies(evt, value) {
@@ -191,8 +202,10 @@ function App() {
     }
     if (saveMovies.length === 0 || list.length === 0) {
       setText("Ничего не найдено.");
+      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(0));
       return null;
     }
+    refresh()
   }
 
   function handleSmallMetr() {
@@ -228,6 +241,11 @@ function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoaderActive(false));
+  }
+
+  
+  function refresh() {
+    setReSearch(!research)
   }
 
   /* !!! */
