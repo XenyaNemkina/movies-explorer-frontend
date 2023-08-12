@@ -11,13 +11,13 @@ function BurgerMenu({ isBurger, onClose }) {
       <div className="burger__menu">
         <button className="burger__closebtn" type="button" onClick={onClose}></button>
         <div className="burger__links">
-          <Link to="/" className={`burger__link ${path === "/" && "burger__link_active"} link`}>
+          <Link to="/" className={`burger__link ${path === "/" && "burger__link_active"} link`} onClick={onClose}>
             Главная
           </Link>
-          <Link to="/movies" className={`burger__link ${path === "/movies" && "burger__link_active"} link`}>
+          <Link to="/movies" className={`burger__link ${path === "/movies" && "burger__link_active"} link`} onClick={onClose}>
             Фильмы
           </Link>
-          <Link to="/saved-movies" className={`burger__link ${path === "/saved-movies" && "burger__link_active"} link`}>
+          <Link to="/saved-movies" className={`burger__link ${path === "/saved-movies" && "burger__link_active"} link`} onClick={onClose}>
             Сохранённые фильмы
           </Link>
           <Account isBurger={isBurger} />

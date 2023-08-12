@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "./SmallMeter.css";
 
-function SmallMeter({ handleSmallMetr, toggleSmallMeter }) {
-  const isChecked = localStorage.getItem("smallMeter") === "false" || localStorage.getItem("smallMeter") === false ? false : true;
-  localStorage.setItem("smallMeter", toggleSmallMeter.toString());
-
+function SmallMeter({ handleSmallMetr }) {
+  const [isChecked, setIsChecked] = useState(localStorage.getItem("smallMeter") === "true" ? true : false);
+ 
   function actionSmallMetr(e) {
-    localStorage.setItem("smallMeter", handleSmallMetr().toString());
+    const updatedValue = !isChecked;
+    setIsChecked(updatedValue);
+    handleSmallMetr();
+    localStorage.setItem("smallMeter", updatedValue.toString());
   }
 
   return (

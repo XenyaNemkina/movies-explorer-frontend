@@ -28,42 +28,50 @@ function App() {
   const [text, setText] = useState("");
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState("");
-
+  
+  const handleGetUserInfo = (token) => {
+    return newMainApi.getUserInfo(token).then((user) => {
+      setIsLoggedIn(true);
+      setCurrentUser(user);
+      return user;
+    });
+  };
+  
+  const handleGetSavedMovies = () => {
+    return newMainApi
+      .getSavedMovies()
+      .then((res) => {
+        if (!res) {
+          setText("Ничего не найдено");
+        } else {
+          localStorage.setItem("savedMoviesList", JSON.stringify(res));
+        }
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoaderActive(false));
+  };
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      newMainApi
-        .getUserInfo(token)
-        .then((user) => {
-          setIsLoggedIn(true);
-          setCurrentUser(user);
-          return user;
-        })
-        .then((user) => {
-          newMainApi
-            .getSavedMovies()
-            .then((res) => {
-              if (!res) {
-                setText("Ничего не найдено");
-              } else {
-                localStorage.setItem("savedMoviesList", JSON.stringify(res));
-              }
-            })
-            .catch((err) => console.log(err))
-            .finally(() => setIsLoaderActive(false));
-        })
+      handleGetUserInfo(token)
+        .then(handleGetSavedMovies)
         .catch((err) => console.log(err))
         .finally(() => setIsLoaderActive(false));
     }
   }, []);
 
   async function handleLogin(email, password) {
+    setIsLoaderActive(true);
     try {
       const data = await newMainApi.authorization(email, password);
       localStorage.setItem("token", data.token);
-      setIsLoggedIn(true);
-      setCurrentUser(data);
-      navigate("/movies", { replace: true });
+      if (data.token) {
+        handleGetUserInfo(data.token)
+          .then(() => handleGetSavedMovies())
+          .then(() => navigate("/movies", { replace: true }))
+          .catch((err) => console.log(err));
+      }
     } catch (err) {
       setErrorAuth(err);
     }
@@ -73,13 +81,15 @@ function App() {
     try {
       const user = await newMainApi.register(name, email, password);
       if (user) {
-        const auth = await handleLogin(email, password);
+      await handleLogin(email, password);
         setCurrentUser(user);
         setIsLoggedIn(true);
         navigate("/movies", { replace: true });
       }
     } catch (err) {
       setErrorAuth(err);
+    } finally {
+      setIsLoaderActive(false);
     }
   }
 
@@ -119,22 +129,24 @@ function App() {
 
   /* !!! */
   async function findAllMovies() {
-    setIsLoaderActive(true);
     try {
       const moviesData = await moviesApi.getMovies();
       localStorage.setItem("allMovies", JSON.stringify(moviesData));
-      console.log(moviesData);
+      localStorage.setItem("smallMeter", false);
+      filterMoviesByValue(moviesData); 
       return moviesData;
     } catch (err) {
       console.log(err);
       throw err;
-    } finally {
-    setIsLoaderActive(true);
-    }
+    } 
   }
 
   async function filterMoviesByValue(allMovies, value) {
-    setIsLoaderActive(true);
+    if (!value) {
+      setText("Введите значение.");
+      return null;
+    }
+    value = value.toLowerCase();
     let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
     if (list.length === 0) {
       setText("Ничего не найдено.");
@@ -147,43 +159,34 @@ function App() {
       localStorage.setItem("findList", JSON.stringify(list));
       localStorage.setItem("valueInput", value);
       localStorage.setItem("numberOfMoviesDisplayed", "0");
-    } else {
+      } else {
       setText("");
       list = list.filter((el) => el.duration < 40);
       localStorage.setItem("findList", JSON.stringify(list));
       localStorage.setItem("valueInput", value);
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     }
+    refresh();
     setIsLoaderActive(false);
   }
-
+  
   async function findMovies(evt, value) {
     evt.preventDefault();
-    if (!value) {
-      setText("Введите значение.");
-      return null;
-    }
     setIsLoaderActive(true);
-
-    const allMovies = JSON.parse(localStorage.getItem("allMovies"));
-    console.log(allMovies);
-    value = value.toLowerCase();
-
+    let allMovies = JSON.parse(localStorage.getItem("allMovies"));
     if (!allMovies) {
       try {
-        const res = await findAllMovies();
-        await filterMoviesByValue(res, value);
+        allMovies = await findAllMovies();
       } catch (err) {
-        setText("Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз");
-      } finally {
-        setIsLoaderActive(false);
+        setText(
+          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+        );
       }
-    } else {
-      await filterMoviesByValue(allMovies, value);
-      setIsLoaderActive(false);
     }
-    refresh()
+  
+    await filterMoviesByValue(allMovies, value);
   }
+  
 
   function findSavedMovies(evt, value) {
     evt.preventDefault();
@@ -210,6 +213,7 @@ function App() {
 
   function handleSmallMetr() {
     setToggleSmallMeter(!toggleSmallMeter);
+    localStorage.setItem("smallMeter", !toggleSmallMeter.toString());
     return toggleSmallMeter;
   }
 
@@ -219,7 +223,6 @@ function App() {
       const targetFilm = JSON.parse(localStorage.getItem("findList")).filter((el) => el.id === data.id)[0];
       const response = await newMainApi.postMovie(targetFilm);
 
-      // Обновляем список сохраненных фильмов
       const savedMoviesList = JSON.parse(localStorage.getItem("savedMoviesList")) || [];
       savedMoviesList.push(response);
       localStorage.setItem("savedMoviesList", JSON.stringify(savedMoviesList));

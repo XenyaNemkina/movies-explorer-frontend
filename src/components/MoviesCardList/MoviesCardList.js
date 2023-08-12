@@ -5,8 +5,8 @@ import useWindowDimensions from "../../utils/changeWindow";
 import { SMALL_WINDOW_WIDTH, MEDIUM_WINDOW_WIDTH, SMALL_ROW_NUMBER, SMALL_ADD_MOVIE_ROW, MEDIUM_ROW_NUMBER, MEDIUM_ADD_MOVIE_ROW, LARGE_ROW_NUMBER, LARGE_ADD_MOVIE_ROW } from "../../utils/constants";
 
 function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
-  const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem("numberOfMoviesDisplayed"));
-  let windowWidth = useWindowDimensions().width;
+  const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
+  let windowWidth = useWindowDimensions().width
   let rowNumber;
   let addMovieRow;
 
@@ -20,49 +20,36 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     rowNumber = LARGE_ROW_NUMBER;
     addMovieRow = LARGE_ADD_MOVIE_ROW;
   }
-
-  if (+numberOfMoviesDisplayed < 4) {
-    localStorage.setItem("numberOfMoviesDisplayed", rowNumber.toString());
-    setNumberOfMoviesDisplayed(rowNumber.toString());
-  }
-
-  const findList = JSON.parse(localStorage.getItem("findList"));
-
-  const savedList = JSON.parse(localStorage.getItem("savedMoviesList"));
-  let displaySearchSavedMovies;
-  if (localStorage.getItem("valueInputSavedMovies")?.length) {
-    displaySearchSavedMovies = JSON.parse(localStorage.getItem("SavedMovieslistMatchInput"));
-  }
-  const [limitCoin, setLimitCoin] = useState(Number(numberOfMoviesDisplayed));
-  const [buttonVisible, setButtonVisible] = useState(false);
-
-  function renderLimiter(value = 0) {
-    setLimitCoin((prev) => prev + addMovieRow);
-    localStorage.setItem("numberOfMoviesDisplayed", (+limitCoin + addMovieRow).toString());
-  }
-
-  function disableButton(value) {
-    setButtonVisible(value);
-  }
-
-  useEffect(() => {
-    if (!isSaved) {
-      setNumberOfMoviesDisplayed(rowNumber.toString());
-    }
-  }, [findList]);
   
+  const [limitCoin, setLimitCoin] = useState(Number(rowNumber))
+  const [buttonVisible, setButtonVisible] = useState(false)
 
-  useEffect(() => {
-    if (Number(localStorage.getItem("numberOfMoviesDisplayed")) === 0) {
-      localStorage.setItem("numberOfMoviesDisplayed", rowNumber.toString());
-      setLimitCoin(rowNumber);
-      disableButton(false);
-    }
-  }, [localStorage.getItem("numberOfMoviesDisplayed"), windowWidth]);
+  function renderLimiter(val= 0) {
+    setLimitCoin((prev)=> prev + addMovieRow)
+    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + addMovieRow).toString())
+  }
 
-  if (limitCoin > findList?.length) {
-    setLimitCoin(findList.length - 1);
-    disableButton(true);
+  function disableButton(val){
+    setButtonVisible(val)
+  }
+
+  const findList = JSON.parse(localStorage.getItem('findList'))
+  const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
+  let displaySearchSavedMovies
+  if(localStorage.getItem('valInputSavedMovies')?.length){
+    displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
+  }
+
+  useEffect(()=> {
+    if(Number(localStorage.getItem('numberOfMoviesDisplayed')) === 0){
+      localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
+      setLimitCoin(rowNumber)
+      disableButton(false)
+  }}, [localStorage.getItem('numberOfMoviesDisplayed'), windowWidth])
+
+  if(limitCoin >= findList?.length){
+    setLimitCoin(findList.length - 1)
+    disableButton(true)
   }
 
   return (
@@ -104,11 +91,11 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
               return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
             })}
       </div>
-      {isSaved && findList?.length !== 0 && buttonVisible && (
+      {isSaved || !findList || buttonVisible ? null : 
         <button type="button" className="movieslist__morebtn" onClick={renderLimiter}>
           Ещё
         </button>
-      )}
+      }
     </section>
   );
 }

@@ -3,12 +3,13 @@ class MoviesApi {
     this._url = options.baseUrl;
   }
 
-  getMovies() {
-    return fetch(`${this._url}`, {
+  async getMovies() {
+    const res = await fetch(`${this._url}`, {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => this._checkResponse(res));
+    });
+    return this._checkResponse(res);
   }
 
   _checkResponse(res) {
