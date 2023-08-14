@@ -33,6 +33,17 @@
   margin: 60px 30px 80px;
 }
 
+.movieslist__error {
+  font-family: "Inter", Arial, sans-serif;
+  color: #ff4062;
+  display: block;
+  padding: 0;
+  text-align: center;
+  margin: 10px auto 0;
+  font-size: 20px;
+  min-height: 22px;
+}
+
 @media screen and (max-width: 1162px) {
   .movieslist__items {
     grid-template-columns: repeat(2, minmax(342px, 1fr));

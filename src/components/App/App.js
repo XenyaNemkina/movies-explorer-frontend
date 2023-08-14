@@ -127,49 +127,22 @@ function App() {
     }
   }
 
+function setTextMovies(text) {
+  setText(text)
+}
+
   /* !!! */
   async function findAllMovies() {
     try {
       const moviesData = await moviesApi.getMovies();
       localStorage.setItem("allMovies", JSON.stringify(moviesData));
       localStorage.setItem("smallMeter", false);
-      filterMoviesByValue(moviesData); 
       return moviesData;
     } catch (err) {
       console.log(err);
       throw err;
     } 
   }
-
-  async function filterMoviesByValue(allMovies, value) {
-    if (!value) {
-      setText("Введите значение.");
-      return null;
-    }
-    value = value.toLowerCase();
-    let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
-    if (list.length === 0) {
-      setText("Ничего не найдено.");
-      localStorage.setItem("findList", JSON.stringify(0));
-      return null;
-    }
-    const isSmallMeter = localStorage.getItem("smallMeter");
-    if (isSmallMeter === "false") {
-      setText("");
-      localStorage.setItem("findList", JSON.stringify(list));
-      localStorage.setItem("valueInput", value);
-      localStorage.setItem("numberOfMoviesDisplayed", "0");
-      } else {
-      setText("");
-      list = list.filter((el) => el.duration < 40);
-      localStorage.setItem("findList", JSON.stringify(list));
-      localStorage.setItem("valueInput", value);
-      localStorage.setItem("numberOfMoviesDisplayed", "0");
-    }
-    refresh();
-    setIsLoaderActive(false);
-  }
-  
   async function findMovies(evt, value) {
     evt.preventDefault();
     setIsLoaderActive(true);
@@ -184,11 +157,39 @@ function App() {
       }
     }
   
-    await filterMoviesByValue(allMovies, value);
+    if (!value) {
+      setTextMovies("Введите значение.");
+      setIsLoaderActive(false);
+      return;
+    }
+  
+    value = value.toLowerCase();
+    let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
+  
+    if (list.length === 0) {
+      localStorage.setItem("findList", JSON.stringify(0));
+      setTextMovies("Ничего не найдено.");
+    } else {
+      const isSmallMeter = localStorage.getItem("smallMeter");
+      if (isSmallMeter === "false") {
+        setText("");
+        localStorage.setItem("findList", JSON.stringify(list));
+        localStorage.setItem("valueInput", value);
+        localStorage.setItem("numberOfMoviesDisplayed", "0");
+        refresh();
+        } else {
+        setText("");
+        list = list.filter((el) => el.duration < 40);
+        localStorage.setItem("findList", JSON.stringify(list));
+        localStorage.setItem("valueInput", value);
+        localStorage.setItem("numberOfMoviesDisplayed", "0");
+      refresh();
+    }}
+      setIsLoaderActive(false);
   }
   
 
-  function findSavedMovies(evt, value) {
+  async function findSavedMovies(evt, value) {
     evt.preventDefault();
     value = value.toLowerCase();
     localStorage.setItem("valueInputSavedMovies", value);

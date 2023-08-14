@@ -21,6 +21,13 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     addMovieRow = LARGE_ADD_MOVIE_ROW;
   }
   
+  const findList = JSON.parse(localStorage.getItem('findList'))
+  const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
+  let displaySearchSavedMovies
+  if(localStorage.getItem('valueInputSavedMovies')?.length){
+    displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
+  }
+
   const [limitCoin, setLimitCoin] = useState(Number(rowNumber))
   const [buttonVisible, setButtonVisible] = useState(false)
 
@@ -33,14 +40,7 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     setButtonVisible(val)
   }
 
-  const findList = JSON.parse(localStorage.getItem('findList'))
-  const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
-  let displaySearchSavedMovies
-  if(localStorage.getItem('valInputSavedMovies')?.length){
-    displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
-  }
-
-  useEffect(()=> {
+   useEffect(()=> {
     if(Number(localStorage.getItem('numberOfMoviesDisplayed')) === 0){
       localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
       setLimitCoin(rowNumber)
@@ -55,41 +55,32 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
   return (
     <section className="movieslist">
       <div className="movieslist__items">
-        {displaySearchSavedMovies?.length && isSaved
-          ? displaySearchSavedMovies.map((el) => <MoviesCard data={el} id={el.id ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
-          : isSaved
-          ? savedList?.map((el) => <MoviesCard data={el} id={el.movieId ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
-          : findList?.length - limitCoin <= 1
-          ? findList?.map((el) => {
-              let isLike;
-              if (savedList) {
-                isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
-              } else {
-                isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
-              }
-              return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
-            })
-          : findList?.length > 4
-          ? findList.slice(0, limitCoin).map((el) => {
-              let isLike;
-              if (savedList) {
-                isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
-              } else {
-                isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
-              }
-              return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
-            })
-          : findList?.length < 4 &&
-            findList?.length > 0 &&
-            findList.map((el) => {
-              let isLike;
-              if (savedList) {
-                isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
-              } else {
-                isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
-              }
-              return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
-            })}
+      {isSaved && displaySearchSavedMovies?.length
+  ? displaySearchSavedMovies.map((el) => <MoviesCard data={el} id={el.id ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
+  : isSaved
+  ? savedList?.map((el) => <MoviesCard data={el} id={el.movieId ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
+  : findList?.length > 4
+  ? findList.slice(0, limitCoin).map((el) => {
+      let isLike;
+      if (savedList) {
+        isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
+      } else {
+        isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
+      }
+      return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
+    })
+  : findList?.length > 0
+  ? findList.map((el) => {
+      let isLike;
+      if (savedList) {
+        isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
+      } else {
+        isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
+      }
+      return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
+    })
+  : null
+}
       </div>
       {isSaved || !findList || buttonVisible ? null : 
         <button type="button" className="movieslist__morebtn" onClick={renderLimiter}>
