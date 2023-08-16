@@ -12,7 +12,7 @@ import NotFound from "../NotFound/NotFound";
 import BurgerMenu from "../BurgerMenu/BurgerMenu";
 import { newMainApi } from "../../utils/MainApi";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import Preloader from "../Preloader/Preloader";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import moviesApi from "../../utils/MoviesApi";
@@ -59,38 +59,52 @@ function App() {
         .catch((err) => console.log(err))
         .finally(() => setIsLoaderActive(false));
     }
+    
   }, []);
 
-  async function handleLogin(email, password) {
-    setIsLoaderActive(true);
-    try {
-      const data = await newMainApi.authorization(email, password);
-      localStorage.setItem("token", data.token);
-      if (data.token) {
-        handleGetUserInfo(data.token)
-          .then(() => handleGetSavedMovies())
-          .then(() => navigate("/movies", { replace: true }))
-          .catch((err) => console.log(err));
-      }
-    } catch (err) {
-      setErrorAuth(err);
-    }
+  function handleLogin(email, password) {
+    setErrorAuth("");
+    return newMainApi
+      .authorization(email, password)
+      .then(data => {
+        localStorage.setItem("token", data.token);
+        if (data.token) {
+          return handleGetUserInfo(data.token)
+            .then(handleGetSavedMovies)
+            .then(() => {
+              navigate("/movies", {
+                replace: true
+              });
+            });
+        }
+      })
+      .catch(err => {
+        setErrorAuth(err);
+      })
   }
-
-  async function handleRegister(name, email, password) {
-    try {
-      const user = await newMainApi.register(name, email, password);
-      if (user) {
-      await handleLogin(email, password);
-        setCurrentUser(user);
-        setIsLoggedIn(true);
-        navigate("/movies", { replace: true });
-      }
-    } catch (err) {
-      setErrorAuth(err);
-    } finally {
-      setIsLoaderActive(false);
-    }
+  
+  function handleRegister(name, email, password) {
+    setIsLoaderActive(true);
+    setErrorAuth("");
+    return newMainApi
+      .register(name, email, password)
+      .then(user => {
+        if (user) {
+          return handleLogin(email, password).then(() => {
+            setCurrentUser(user);
+            setIsLoggedIn(true);
+            navigate("/movies", {
+              replace: true
+            });
+          });
+        }
+      })
+      .catch(err => {
+        setErrorAuth(err);
+      })
+      .finally(() => {
+        setIsLoaderActive(false);
+      });
   }
 
   function handleUpdateUser(userData) {
@@ -132,6 +146,21 @@ function setTextMovies(text) {
 }
 
   /* !!! */
+ /* useEffect(() => {
+    const value = localStorage.getItem("valueInput");
+    const isSmallMeter = localStorage.getItem("smallMeter");
+    const moviesList = JSON.parse(localStorage.getItem("findList"));
+      if (isSmallMeter === "false") {
+        localStorage.setItem("findList", JSON.stringify(moviesList));
+        localStorage.setItem("valueInput", value);
+        localStorage.setItem("numberOfMoviesDisplayed", "0");
+        } else {
+        const list = moviesList.filter((el) => el.duration < 40);
+        localStorage.setItem("findList", JSON.stringify(list));
+        localStorage.setItem("valueInput", value);
+        localStorage.setItem("numberOfMoviesDisplayed", "0");
+    }}, [toggleSmallMeter])
+*/
   async function findAllMovies() {
     try {
       const moviesData = await moviesApi.getMovies();
@@ -143,6 +172,7 @@ function setTextMovies(text) {
       throw err;
     } 
   }
+
   async function findMovies(evt, value) {
     evt.preventDefault();
     setIsLoaderActive(true);
@@ -156,7 +186,7 @@ function setTextMovies(text) {
         );
       }
     }
-  
+
     if (!value) {
       setTextMovies("Введите значение.");
       setIsLoaderActive(false);
@@ -212,9 +242,29 @@ function setTextMovies(text) {
     refresh()
   }
 
+  function setMoviesWithSmallMeter() {
+    console.log("tut")
+    const allMovies = JSON.parse(localStorage.getItem("allMovies"))
+    const value = localStorage.getItem("valueInput");
+    const list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
+    const isSmallMeter = localStorage.getItem("smallMeter");
+    console.log(isSmallMeter)
+    if (isSmallMeter === "false") {
+      console.log("1")
+      localStorage.setItem("findList", JSON.stringify(list));
+      localStorage.setItem("numberOfMoviesDisplayed", "0");
+    } else {
+      console.log("2")
+      const filteredList = list.filter((el) => el.duration < 40);
+      localStorage.setItem("findList", JSON.stringify(filteredList));
+      localStorage.setItem("numberOfMoviesDisplayed", "0");
+    }
+  }
+
   function handleSmallMetr() {
     setToggleSmallMeter(!toggleSmallMeter);
-    localStorage.setItem("smallMeter", !toggleSmallMeter.toString());
+    localStorage.setItem("smallMeter", (!toggleSmallMeter).toString());
+    setMoviesWithSmallMeter();
     return toggleSmallMeter;
   }
 

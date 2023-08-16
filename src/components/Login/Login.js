@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Logo from "../Logo/Logo";
 import useFormValidation from "../../hooks/useFormValidation";
 
-function Login({ onSubmit }) {
+function Login({ onSubmit, errorAuth }) {
   const { values, errors, isFormValid, handleChange, handleResetValidation } = useFormValidation();
 
   const handleSubmitLogin = (e) => {
@@ -27,6 +27,7 @@ function Login({ onSubmit }) {
           <input className="login__field" type="password" name="password" value={values.password || ""} autoComplete="off" onChange={handleChange} required />
           <span className={`login__field_error ${errors.password && "login__field_error_active"}`}>{errors.password}</span>
         </div>
+        <span className={"register__field_error_server"}>{errorAuth}</span>
         <button type="submit" className={`login__savebtn link ${!isFormValid && `login__savebtn_disabled`}`} disabled={!isFormValid} onSubmit={handleSubmitLogin}>
           Войти
         </button>

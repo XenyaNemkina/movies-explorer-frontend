@@ -10,6 +10,7 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
  
   useEffect(() => {
     setName(currentUser ? currentUser.name : "Виталий");
@@ -23,8 +24,6 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
       email: email,
 
     });
-    
-  
   }
 
   function isValidEmail(email) {
@@ -33,6 +32,7 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
 
   function handleChangeName(evt) {
     setName(evt.target.value);
+    setHasChanges(true);
     if (evt.target.name === "name" && evt.target.validity.patternMismatch) {
       setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис");
     } else if (evt.target.name === "name" && evt.target.validationMessage) {
@@ -49,6 +49,7 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
 
   function handleChangeEmail(evt) {
     setEmail(evt.target.value);
+    setHasChanges(true);
     if (evt.target.name === "email" && !isValidEmail(evt.target.value)) {
       setEmailError("Необходимо ввести адрес почты");
     } else if (evt.target.name === "email" && !evt.target.validity.valid) {
@@ -100,12 +101,17 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
             </>
           )}
           {isUpdateMode && (
-            <>
-              <button className={`profile_savebtn link ${(emailError || nameError) && `profile_savebtn_disabled`}`} type="submit" disabled={emailError || nameError} onClick={handleSubmit}>
-                Сохранить
-              </button>
-            </>
-          )}
+        <>
+          <button
+            className={`profile_savebtn link ${(!hasChanges || emailError || nameError) && "profile_savebtn_disabled"}`}
+            type="submit"
+            disabled={!hasChanges || emailError || nameError}
+            onClick={handleSubmit}
+          >
+            Сохранить
+          </button>
+        </>
+      )}
         </form>
       </main>
     </>

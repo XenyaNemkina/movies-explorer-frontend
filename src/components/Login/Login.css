@@ -76,7 +76,7 @@
   font-size: 14px;
   font-weight: 500;
   color: #fff;
-  margin: 134px 0 16px;
+  margin: 10px 0 16px;
 }
 
 .login__savebtn_disabled {
@@ -111,7 +111,7 @@
 
   .login__savebtn {
     font-size: 12px;
-    margin: 309px 0 14px;
+    margin: 10px 0 14px;
   }
 
   .login__text {

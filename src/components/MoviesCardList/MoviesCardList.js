@@ -20,7 +20,11 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     rowNumber = LARGE_ROW_NUMBER;
     addMovieRow = LARGE_ADD_MOVIE_ROW;
   }
-  
+  if (+numberOfMoviesDisplayed < 4){
+    localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
+    setNumberOfMoviesDisplayed(rowNumber.toString())
+  }
+
   const findList = JSON.parse(localStorage.getItem('findList'))
   const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
   let displaySearchSavedMovies
@@ -28,19 +32,21 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
   }
 
-  const [limitCoin, setLimitCoin] = useState(Number(rowNumber))
+
+
+  const [limitCoin, setLimitCoin] = useState(Number(numberOfMoviesDisplayed))
   const [buttonVisible, setButtonVisible] = useState(false)
 
   function renderLimiter(val= 0) {
-    setLimitCoin((prev)=> prev + addMovieRow)
-    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + addMovieRow).toString())
+    setLimitCoin((prev)=> prev + rowNumber)
+    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + rowNumber).toString())
   }
 
   function disableButton(val){
     setButtonVisible(val)
   }
 
-   useEffect(()=> {
+  useEffect(()=> {
     if(Number(localStorage.getItem('numberOfMoviesDisplayed')) === 0){
       localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
       setLimitCoin(rowNumber)
@@ -51,7 +57,6 @@ function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
     setLimitCoin(findList.length - 1)
     disableButton(true)
   }
-
   return (
     <section className="movieslist">
       <div className="movieslist__items">
