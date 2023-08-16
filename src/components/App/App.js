@@ -146,21 +146,6 @@ function setTextMovies(text) {
 }
 
   /* !!! */
- /* useEffect(() => {
-    const value = localStorage.getItem("valueInput");
-    const isSmallMeter = localStorage.getItem("smallMeter");
-    const moviesList = JSON.parse(localStorage.getItem("findList"));
-      if (isSmallMeter === "false") {
-        localStorage.setItem("findList", JSON.stringify(moviesList));
-        localStorage.setItem("valueInput", value);
-        localStorage.setItem("numberOfMoviesDisplayed", "0");
-        } else {
-        const list = moviesList.filter((el) => el.duration < 40);
-        localStorage.setItem("findList", JSON.stringify(list));
-        localStorage.setItem("valueInput", value);
-        localStorage.setItem("numberOfMoviesDisplayed", "0");
-    }}, [toggleSmallMeter])
-*/
   async function findAllMovies() {
     try {
       const moviesData = await moviesApi.getMovies();
@@ -243,28 +228,49 @@ function setTextMovies(text) {
   }
 
   function setMoviesWithSmallMeter() {
-    console.log("tut")
     const allMovies = JSON.parse(localStorage.getItem("allMovies"))
     const value = localStorage.getItem("valueInput");
     const list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
     const isSmallMeter = localStorage.getItem("smallMeter");
-    console.log(isSmallMeter)
     if (isSmallMeter === "false") {
-      console.log("1")
       localStorage.setItem("findList", JSON.stringify(list));
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     } else {
-      console.log("2")
       const filteredList = list.filter((el) => el.duration < 40);
       localStorage.setItem("findList", JSON.stringify(filteredList));
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     }
   }
 
+  function setSavedMoviesWithSmallMeter() {
+    const saveMovies = JSON.parse(localStorage.getItem("savedMoviesList"));
+    console.log(saveMovies)
+    const value = localStorage.getItem("valueInput");
+    const list = saveMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
+    console.log(list)
+    const isSmallMeter = localStorage.getItem("smallMeter");
+    if (isSmallMeter === "false") {
+      console.log("1")
+      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(list));
+      localStorage.setItem("numberOfMoviesDisplayed", "0");
+    } else {
+      console.log("2")
+      const filteredList = list.filter((el) => el.duration < 40);
+      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(filteredList));
+      localStorage.setItem("numberOfMoviesDisplayed", "0");
+    }
+  }
+  const location = useLocation();
+
   function handleSmallMetr() {
     setToggleSmallMeter(!toggleSmallMeter);
     localStorage.setItem("smallMeter", (!toggleSmallMeter).toString());
-    setMoviesWithSmallMeter();
+    if (location.pathname === "/movies") {
+      setMoviesWithSmallMeter()
+    }
+    if (location.pathname === "/saved-movies") {
+      setSavedMoviesWithSmallMeter()
+    }
     return toggleSmallMeter;
   }
 
