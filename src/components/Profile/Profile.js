@@ -31,36 +31,41 @@ function Profile({ onUpdateUser, errorAuth, onLogout, isSuccess }) {
   }
 
   function handleChangeName(evt) {
-    setName(evt.target.value);
-    setHasChanges(true);
-    if (evt.target.name === "name" && evt.target.validity.patternMismatch) {
-      setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис");
-    } else if (evt.target.name === "name" && evt.target.validationMessage) {
-      setNameError(evt.target.validationMessage);
-    } else if (evt.target.value === currentUser.name) {
-      setNameError("Введенные данные должны отличаться");
-      if (!evt.target.value) {
-        setNameError("Заполните поле");
+    if (evt.target.value) {
+      setName(evt.target.value);
+      setHasChanges(true);
+      if (evt.target.name === "name" && evt.target.validity.patternMismatch) {
+        setNameError("Поле может содержать только латиницу, кириллицу, пробел или дефис");
+      } else if (evt.target.name === "name" && evt.target.validationMessage) {
+        setNameError(evt.target.validationMessage);
+      } else if (evt.target.value === currentUser.name) {
+        setNameError("Введенные данные должны отличаться");
+        if (!evt.target.value) {
+          setNameError("Заполните поле");
+        }
+      } else {
+        setNameError("");
       }
-    } else {
-      setNameError("");
-    }
+    }  
   }
 
   function handleChangeEmail(evt) {
-    setEmail(evt.target.value);
-    setHasChanges(true);
-    if (evt.target.name === "email" && !isValidEmail(evt.target.value)) {
-      setEmailError("Необходимо ввести адрес почты");
-    } else if (evt.target.name === "email" && !evt.target.validity.valid) {
-      setEmailError(evt.target.validationMessage);
-    } else if (evt.target.value === currentUser.email) {
-      setEmailError("Введенные данные должны отличаться");
-      if (!evt.target.value) {
-        setEmailError("Заполните поле");
+
+    if (evt.target.value) {
+      setEmail(evt.target.value);
+      setHasChanges(true);
+      if (evt.target.name === "email" && !isValidEmail(evt.target.value)) {
+        setEmailError("Необходимо ввести адрес почты");
+      } else if (evt.target.name === "email" && !evt.target.validity.valid) {
+        setEmailError(evt.target.validationMessage);
+      } else if (evt.target.value === currentUser.email) {
+        setEmailError("Введенные данные должны отличаться");
+        if (!evt.target.value) {
+          setEmailError("Заполните поле");
+        }
+      } else {
+        setEmailError("");
       }
-    } else {
-      setEmailError("");
     }
   }
 

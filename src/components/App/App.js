@@ -23,11 +23,15 @@ function App() {
   const [isLoaderActive, setIsLoaderActive] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [errorAuth, setErrorAuth] = useState("");
-  const [toggleSmallMeter, setToggleSmallMeter] = useState(false);
+  //const [toggleSmallMeter, setToggleSmallMeter] = useState(false);
   const [research, setReSearch] = useState(false);
   const [text, setText] = useState("");
-  const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState("");
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [moviesToRender, setMoviesToRender] = useState([]);
+
+
+  const navigate = useNavigate();
   
   const handleGetUserInfo = (token) => {
     return newMainApi.getUserInfo(token).then((user) => {
@@ -52,10 +56,28 @@ function App() {
   };
   
   useEffect(() => {
+    if (localStorage.getItem('savedMoviesList')?.length){
+      setSavedMovies(JSON.parse(localStorage.getItem('savedMoviesList')))
+    }
+  }, [])
+
+
+  useEffect(() => {
+    if (localStorage.getItem('allMovies')?.length){
+      setMoviesToRender(JSON.parse(localStorage.getItem('allMovies')))
+    }
+  }, [])
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       handleGetUserInfo(token)
         .then(handleGetSavedMovies)
+        .then(() => {
+          navigate("/movies", {
+            replace: true
+          });
+        })
         .catch((err) => console.log(err))
         .finally(() => setIsLoaderActive(false));
     }
@@ -180,26 +202,31 @@ function setTextMovies(text) {
   
     value = value.toLowerCase();
     let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
-  
+
     if (list.length === 0) {
       localStorage.setItem("findList", JSON.stringify(0));
       setTextMovies("Ничего не найдено.");
+      setMoviesToRender([]);
     } else {
       const isSmallMeter = localStorage.getItem("smallMeter");
       if (isSmallMeter === "false") {
-        setText("");
-        localStorage.setItem("findList", JSON.stringify(list));
-        localStorage.setItem("valueInput", value);
-        localStorage.setItem("numberOfMoviesDisplayed", "0");
-        refresh();
+          setText("");
+          localStorage.setItem("findList", JSON.stringify(list));
+          localStorage.setItem("valueInput", value);
+          localStorage.setItem("numberOfMoviesDisplayed", "0");
+          refresh();
         } else {
-        setText("");
-        list = list.filter((el) => el.duration < 40);
-        localStorage.setItem("findList", JSON.stringify(list));
-        localStorage.setItem("valueInput", value);
-        localStorage.setItem("numberOfMoviesDisplayed", "0");
-      refresh();
-    }}
+          setText("");
+          list = list.filter((el) => el.duration < 40);
+          localStorage.setItem("findList", JSON.stringify(list));
+          localStorage.setItem("valueInput", value);
+          localStorage.setItem("numberOfMoviesDisplayed", "0");
+          refresh();
+        }
+
+        setMoviesToRender(list);
+      }
+
       setIsLoaderActive(false);
   }
   
@@ -211,6 +238,7 @@ function setTextMovies(text) {
     const saveMovies = JSON.parse(localStorage.getItem("savedMoviesList"));
     const isSmallMeter = localStorage.getItem("smallMeter");
     let list = saveMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
+
     if (isSmallMeter === "false") {
       setText("");
       localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(list));
@@ -222,8 +250,9 @@ function setTextMovies(text) {
     if (saveMovies.length === 0 || list.length === 0) {
       setText("Ничего не найдено.");
       localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(0));
-      return null;
     }
+
+    setSavedMovies(list)
     refresh()
   }
 
@@ -244,10 +273,8 @@ function setTextMovies(text) {
 
   function setSavedMoviesWithSmallMeter() {
     const saveMovies = JSON.parse(localStorage.getItem("savedMoviesList"));
-    console.log(saveMovies)
     const value = localStorage.getItem("valueInput");
     const list = saveMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
-    console.log(list)
     const isSmallMeter = localStorage.getItem("smallMeter");
     if (isSmallMeter === "false") {
       console.log("1")
@@ -262,45 +289,47 @@ function setTextMovies(text) {
   }
   const location = useLocation();
 
-  function handleSmallMetr() {
-    setToggleSmallMeter(!toggleSmallMeter);
-    localStorage.setItem("smallMeter", (!toggleSmallMeter).toString());
-    if (location.pathname === "/movies") {
-      setMoviesWithSmallMeter()
-    }
-    if (location.pathname === "/saved-movies") {
-      setSavedMoviesWithSmallMeter()
-    }
-    return toggleSmallMeter;
-  }
+  // function handleSmallMetr() {
+  //   setToggleSmallMeter(!toggleSmallMeter);
+  //   localStorage.setItem("smallMeter", (!toggleSmallMeter).toString());
+  //   if (location.pathname === "/movies") {
+  //     setMoviesWithSmallMeter()
+  //   }
+  //   if (location.pathname === "/saved-movies") {
+  //     setSavedMoviesWithSmallMeter()
+  //   }
+  //   return toggleSmallMeter;
+  // }
 
   async function saveMovie(data) {
     try {
-      setIsLoaderActive(true);
+      //setIsLoaderActive(true);
       const targetFilm = JSON.parse(localStorage.getItem("findList")).filter((el) => el.id === data.id)[0];
       const response = await newMainApi.postMovie(targetFilm);
 
       const savedMoviesList = JSON.parse(localStorage.getItem("savedMoviesList")) || [];
       savedMoviesList.push(response);
       localStorage.setItem("savedMoviesList", JSON.stringify(savedMoviesList));
+      setSavedMovies([...savedMoviesList])
     } catch (err) {
       console.log(err);
     } finally {
-      setIsLoaderActive(false);
+      //setIsLoaderActive(false);
     }
   }
 
   function deleteMovie(movieId) {
-    setIsLoaderActive(true);
+    //setIsLoaderActive(true);
     newMainApi
       .deleteMovie(movieId)
       .then((res) => {
         const listBeforeDelete = JSON.parse(localStorage.getItem("savedMoviesList"));
         const listWithDelete = listBeforeDelete.filter((el) => el._id !== movieId);
         localStorage.setItem("savedMoviesList", JSON.stringify(listWithDelete));
+        console.log('listWithDelete', listWithDelete)
+        setSavedMovies([...listWithDelete])
       })
       .catch((err) => console.log(err))
-      .finally(() => setIsLoaderActive(false));
   }
 
   
@@ -332,7 +361,6 @@ function setTextMovies(text) {
             />
             <Route path="/signin" element={isLoggedIn ? <Navigate to="/" /> : <Login errorAuth={errorAuth} onSubmit={handleLogin} />} />
             <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Register errorAuth={errorAuth} onSubmit={handleRegister} />} />
-            <Route path="*" element={<NotFound />} />
             <Route
               path="/profile"
               element={
@@ -346,7 +374,14 @@ function setTextMovies(text) {
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <Header onBurgerClick={handleBurger} isLoggedIn={isLoggedIn} />
-                  <Movies findMovies={findMovies} handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} saveMovie={saveMovie} deleteMovie={deleteMovie} text={text} />
+                  <Movies 
+                    savedMovies={savedMovies} 
+                    movies={moviesToRender}
+                    findMovies={findMovies}
+                    saveMovie={saveMovie}
+                    deleteMovie={deleteMovie} 
+                    text={text} 
+                  />
                   <Footer />
                 </ProtectedRoute>
               }
@@ -356,11 +391,17 @@ function setTextMovies(text) {
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <Header onBurgerClick={handleBurger} isLoggedIn={isLoggedIn} />
-                  <SavedMovies findMovies={findSavedMovies} handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} deleteMovie={deleteMovie} text={text} />
+                  <SavedMovies 
+                    savedMovies={savedMovies}
+                    findMovies={findSavedMovies}
+                    deleteMovie={deleteMovie}
+                    text={text}
+                  />
                   <Footer />
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <BurgerMenu isBurger={isBurger} onClose={handleBurger} />
         </CurrentUserContext.Provider>

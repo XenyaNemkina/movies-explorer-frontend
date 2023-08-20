@@ -9,6 +9,6 @@ export const MEDIUM_WINDOW_WIDTH = 1161;
 export const SMALL_ROW_NUMBER = 5;
 export const MEDIUM_ROW_NUMBER = 8;
 export const LARGE_ROW_NUMBER = 12;
-export const SMALL_ADD_MOVIE_ROW = 2;
+export const SMALL_ADD_MOVIE_ROW = 1;
 export const MEDIUM_ADD_MOVIE_ROW = 2;
 export const LARGE_ADD_MOVIE_ROW = 3;

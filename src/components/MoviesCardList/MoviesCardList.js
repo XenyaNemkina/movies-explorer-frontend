@@ -2,96 +2,64 @@ import React, { useState, useEffect } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import "./MoviesCardList.css";
 import useWindowDimensions from "../../utils/changeWindow";
-import { SMALL_WINDOW_WIDTH, MEDIUM_WINDOW_WIDTH, SMALL_ROW_NUMBER, SMALL_ADD_MOVIE_ROW, MEDIUM_ROW_NUMBER, MEDIUM_ADD_MOVIE_ROW, LARGE_ROW_NUMBER, LARGE_ADD_MOVIE_ROW } from "../../utils/constants";
+import { SMALL_WINDOW_WIDTH, MEDIUM_WINDOW_WIDTH, SMALL_ROW_NUMBER, MEDIUM_ROW_NUMBER, LARGE_ROW_NUMBER, SMALL_ADD_MOVIE_ROW, MEDIUM_ADD_MOVIE_ROW, LARGE_ADD_MOVIE_ROW } from "../../utils/constants";
 
-function MoviesCardList({ isSaved, saveMovie, deleteMovie }) {
-  const [numberOfMoviesDisplayed, setNumberOfMoviesDisplayed] = useState(localStorage.getItem('numberOfMoviesDisplayed'))
+function MoviesCardList({ savedMovies, isSaved, saveMovie, deleteMovie, movies }) {
+  const [rowNumber, setRowNumber] = useState(0);
+  const [limitCoin, setLimitCoin] = useState(0)
+
   let windowWidth = useWindowDimensions().width
-  let rowNumber;
-  let addMovieRow;
 
-  if (windowWidth < SMALL_WINDOW_WIDTH) {
-    rowNumber = SMALL_ROW_NUMBER;
-    addMovieRow = SMALL_ADD_MOVIE_ROW;
-  } else if (windowWidth >= SMALL_WINDOW_WIDTH && windowWidth < MEDIUM_WINDOW_WIDTH) {
-    rowNumber = MEDIUM_ROW_NUMBER;
-    addMovieRow = MEDIUM_ADD_MOVIE_ROW;
-  } else {
-    rowNumber = LARGE_ROW_NUMBER;
-    addMovieRow = LARGE_ADD_MOVIE_ROW;
-  }
-  if (+numberOfMoviesDisplayed < 4){
-    localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
-    setNumberOfMoviesDisplayed(rowNumber.toString())
+  const cardsCount = () => {
+    if (windowWidth < SMALL_WINDOW_WIDTH) {
+      setRowNumber(SMALL_ROW_NUMBER);
+    } else if (windowWidth >= SMALL_WINDOW_WIDTH && windowWidth < MEDIUM_WINDOW_WIDTH) {
+      setRowNumber(MEDIUM_ROW_NUMBER);
+    } else {
+      setRowNumber(LARGE_ROW_NUMBER);
+    }
   }
 
-  const findList = JSON.parse(localStorage.getItem('findList'))
-  const savedList = JSON.parse(localStorage.getItem('savedMoviesList'))
-  let displaySearchSavedMovies
-  if(localStorage.getItem('valueInputSavedMovies')?.length){
-    displaySearchSavedMovies = JSON.parse(localStorage.getItem('SavedMovieslistMatchInput'))
+  function showMoreCards() {
+    if (windowWidth < SMALL_WINDOW_WIDTH) {
+      setRowNumber(rowNumber + SMALL_ADD_MOVIE_ROW);
+    } else if (windowWidth >= SMALL_WINDOW_WIDTH && windowWidth < MEDIUM_WINDOW_WIDTH) {
+      setRowNumber(rowNumber + MEDIUM_ADD_MOVIE_ROW);
+    } else {
+      setRowNumber(rowNumber + LARGE_ADD_MOVIE_ROW);
+    }
   }
 
+  useEffect(() => {
+    cardsCount();
+  }, [])
 
 
-  const [limitCoin, setLimitCoin] = useState(Number(numberOfMoviesDisplayed))
-  const [buttonVisible, setButtonVisible] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      window.addEventListener('resize', cardsCount);
+    }, 500);
+  });
 
-  function renderLimiter(val= 0) {
-    setLimitCoin((prev)=> prev + rowNumber)
-    localStorage.setItem('numberOfMoviesDisplayed', (+limitCoin + rowNumber).toString())
-  }
-
-  function disableButton(val){
-    setButtonVisible(val)
-  }
-
-  useEffect(()=> {
-    if(Number(localStorage.getItem('numberOfMoviesDisplayed')) === 0){
-      localStorage.setItem('numberOfMoviesDisplayed', rowNumber.toString())
-      setLimitCoin(rowNumber)
-      disableButton(false)
-  }}, [localStorage.getItem('numberOfMoviesDisplayed'), windowWidth])
-
-  if(limitCoin >= findList?.length){
-    setLimitCoin(findList.length - 1)
-    disableButton(true)
-  }
   return (
     <section className="movieslist">
       <div className="movieslist__items">
-      {isSaved && displaySearchSavedMovies?.length
-  ? displaySearchSavedMovies.map((el) => <MoviesCard data={el} id={el.id ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
-  : isSaved
-  ? savedList?.map((el) => <MoviesCard data={el} id={el.movieId ? el.movieId : el.id} key={el.movieId + Math.random()} isSaved={true} deleteMovie={deleteMovie} />)
-  : findList?.length > 4
-  ? findList.slice(0, limitCoin).map((el) => {
-      let isLike;
-      if (savedList) {
-        isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
-      } else {
-        isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
-      }
-      return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
-    })
-  : findList?.length > 0
-  ? findList.map((el) => {
-      let isLike;
-      if (savedList) {
-        isLike = savedList.filter((savedListEl) => savedListEl.movieId === el.id);
-      } else {
-        isLike = savedList?.filter((savedListEl) => savedListEl.movieId === el.id);
-      }
-      return <MoviesCard data={el} key={el.id} saveMovie={saveMovie} id={el.id} isLike={isLike} deleteMovie={deleteMovie} />;
-    })
-  : null
-}
+
+      {movies.length > 0 && movies.slice(0, rowNumber + limitCoin).map((el, index) => {
+        let isLike;
+        if (savedMovies) {
+          isLike = savedMovies?.filter((savedListEl) => savedListEl.movieId === el.id);
+        } else {
+          isLike = savedMovies?.filter((savedListEl) => savedListEl.movieId === el.id);
+        }
+        return <MoviesCard data={el} key={el.id || index} saveMovie={saveMovie} id={el.id} isLike={isLike} isSaved={isSaved} deleteMovie={deleteMovie} />;
+      })}
       </div>
-      {isSaved || !findList || buttonVisible ? null : 
-        <button type="button" className="movieslist__morebtn" onClick={renderLimiter}>
-          Ещё
-        </button>
-      }
+      {movies?.length > rowNumber && (
+        <button type="button" className="movieslist__morebtn" onClick={showMoreCards}>
+        Ещё
+      </button>
+      )}
     </section>
   );
 }
