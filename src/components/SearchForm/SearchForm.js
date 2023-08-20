@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import LabelSearch from "../LabelSearch/LabelSearch";
 import SmallMeter from "../SmallMeter/SmallMeter";
 
-function SearchForm({ findMovies, handleSmallMetr, toggleSmallMeter, text }) {
+function SearchForm({ findMovies, handleSmallMetr, toggleSmallMeter, text, type }) {
   const location = useLocation();
   let inputValue;
   if (location.pathname === "/movies") {
@@ -31,11 +31,11 @@ function SearchForm({ findMovies, handleSmallMetr, toggleSmallMeter, text }) {
     <section className="searchform">
       <form className="searchform__form" onSubmit={handleSubmit} noValidate>
         <LabelSearch writeValue={writeValue} value={value} />
-        {windowWidth && <SmallMeter handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} />}
+        {windowWidth && <SmallMeter handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} type={type} />}
       </form>
-      {!windowWidth && <SmallMeter handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} />}
+      {!windowWidth && <SmallMeter handleSmallMetr={handleSmallMetr} toggleSmallMeter={toggleSmallMeter} type={type} />}
       <hr className="searchform__line" />
-      <span className="searchform__error">{text}</span>
+      {text && <span className="searchform__error">{text}</span>}
     </section>
   );
 }

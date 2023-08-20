@@ -12,7 +12,6 @@ function Movies({ savedMovies, findMovies, saveMovie, deleteMovie, text, movies 
 
 useEffect(() => {
   if (movies) {
-
     let filteredList = [];
     if (isSmallMetr) {
       filteredList = movies?.filter((el) => el.duration < 40);
@@ -25,8 +24,11 @@ useEffect(() => {
 
 
   useEffect(() => {
-    if (localStorage.getItem('smallMeter')) {
-      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeter')))
+    if (localStorage.getItem('smallMeterAll')) {
+      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeterAll')))
+    }
+    if (typeof localStorage.getItem('valueInput') !== undefined) {
+      findMovies(undefined, localStorage.getItem('valueInput'))
     }
   }, [])
 
@@ -37,6 +39,7 @@ useEffect(() => {
         handleSmallMetr={handleSmallMetrCheckbox}
         toggleSmallMeter={isSmallMetr}
         text={text} 
+        type={'all'}
       />
       <MoviesCardList
         savedMovies={savedMovies}

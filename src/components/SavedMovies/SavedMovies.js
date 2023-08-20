@@ -17,13 +17,14 @@ function SavedMovies({ savedMovies, findMovies, saveMovie, deleteMovie, text }) 
     } else {
       filteredList = savedMovies;
     }
+
     setFilteredMovies([...filteredList]);
 
   }, [isSmallMetr, savedMovies])
 
   useEffect(() => {
-    if (localStorage.getItem('smallMeter')) {
-      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeter')))
+    if (localStorage.getItem('smallMeterSaved')) {
+      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeterSaved')))
     }
   }, [])
 
@@ -33,6 +34,7 @@ function SavedMovies({ savedMovies, findMovies, saveMovie, deleteMovie, text }) 
         findMovies={findMovies} 
         handleSmallMetr={handleSmallMetrCheckbox} 
         toggleSmallMeter={isSmallMetr} 
+        type={'saved'}
         text={text}
       />
       <MoviesCardList 

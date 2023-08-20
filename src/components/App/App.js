@@ -21,6 +21,7 @@ function App() {
   const [isBurger, setIsBurger] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [errorAuth, setErrorAuth] = useState("");
   //const [toggleSmallMeter, setToggleSmallMeter] = useState(false);
@@ -32,8 +33,10 @@ function App() {
 
 
   const navigate = useNavigate();
+
   
   const handleGetUserInfo = (token) => {
+    
     return newMainApi.getUserInfo(token).then((user) => {
       setIsLoggedIn(true);
       setCurrentUser(user);
@@ -63,8 +66,8 @@ function App() {
 
 
   useEffect(() => {
-    if (localStorage.getItem('allMovies')?.length){
-      setMoviesToRender(JSON.parse(localStorage.getItem('allMovies')))
+    if (localStorage.getItem('allMovies')?.length && !localStorage.getItem('valueInput')){
+     // setMoviesToRender(JSON.parse(localStorage.getItem('allMovies')))
     }
   }, [])
 
@@ -73,11 +76,11 @@ function App() {
     if (token) {
       handleGetUserInfo(token)
         .then(handleGetSavedMovies)
-        .then(() => {
-          navigate("/movies", {
-            replace: true
-          });
-        })
+        // .then(() => {
+        //   navigate("/movies", {
+        //     replace: true
+        //   });
+        // })
         .catch((err) => console.log(err))
         .finally(() => setIsLoaderActive(false));
     }
@@ -181,8 +184,8 @@ function setTextMovies(text) {
   }
 
   async function findMovies(evt, value) {
-    evt.preventDefault();
-    setIsLoaderActive(true);
+    evt?.preventDefault();
+    //setIsLoaderActive(true);
     let allMovies = JSON.parse(localStorage.getItem("allMovies"));
     if (!allMovies) {
       try {
@@ -195,35 +198,30 @@ function setTextMovies(text) {
     }
 
     if (!value) {
-      setTextMovies("Введите значение.");
-      setIsLoaderActive(false);
+      setMoviesToRender(allMovies)
       return;
     }
   
     value = value.toLowerCase();
     let list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
+    localStorage.setItem("valueInput", value);
 
     if (list.length === 0) {
-      localStorage.setItem("findList", JSON.stringify(0));
       setTextMovies("Ничего не найдено.");
       setMoviesToRender([]);
     } else {
       const isSmallMeter = localStorage.getItem("smallMeter");
       if (isSmallMeter === "false") {
           setText("");
-          localStorage.setItem("findList", JSON.stringify(list));
-          localStorage.setItem("valueInput", value);
           localStorage.setItem("numberOfMoviesDisplayed", "0");
           refresh();
         } else {
           setText("");
           list = list.filter((el) => el.duration < 40);
-          localStorage.setItem("findList", JSON.stringify(list));
           localStorage.setItem("valueInput", value);
           localStorage.setItem("numberOfMoviesDisplayed", "0");
           refresh();
         }
-
         setMoviesToRender(list);
       }
 
@@ -262,11 +260,11 @@ function setTextMovies(text) {
     const list = allMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
     const isSmallMeter = localStorage.getItem("smallMeter");
     if (isSmallMeter === "false") {
-      localStorage.setItem("findList", JSON.stringify(list));
+      //localStorage.setItem("findList", JSON.stringify(list));
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     } else {
       const filteredList = list.filter((el) => el.duration < 40);
-      localStorage.setItem("findList", JSON.stringify(filteredList));
+      //localStorage.setItem("findList", JSON.stringify(filteredList));
       localStorage.setItem("numberOfMoviesDisplayed", "0");
     }
   }
@@ -289,22 +287,10 @@ function setTextMovies(text) {
   }
   const location = useLocation();
 
-  // function handleSmallMetr() {
-  //   setToggleSmallMeter(!toggleSmallMeter);
-  //   localStorage.setItem("smallMeter", (!toggleSmallMeter).toString());
-  //   if (location.pathname === "/movies") {
-  //     setMoviesWithSmallMeter()
-  //   }
-  //   if (location.pathname === "/saved-movies") {
-  //     setSavedMoviesWithSmallMeter()
-  //   }
-  //   return toggleSmallMeter;
-  // }
-
   async function saveMovie(data) {
     try {
       //setIsLoaderActive(true);
-      const targetFilm = JSON.parse(localStorage.getItem("findList")).filter((el) => el.id === data.id)[0];
+      const targetFilm = JSON.parse(localStorage.getItem("allMovies")).filter((el) => el.id === data.id)[0];
       const response = await newMainApi.postMovie(targetFilm);
 
       const savedMoviesList = JSON.parse(localStorage.getItem("savedMoviesList")) || [];
@@ -318,6 +304,10 @@ function setTextMovies(text) {
     }
   }
 
+  useEffect(() => {
+    setText(undefined);
+  }, [location])
+
   function deleteMovie(movieId) {
     //setIsLoaderActive(true);
     newMainApi
@@ -326,7 +316,6 @@ function setTextMovies(text) {
         const listBeforeDelete = JSON.parse(localStorage.getItem("savedMoviesList"));
         const listWithDelete = listBeforeDelete.filter((el) => el._id !== movieId);
         localStorage.setItem("savedMoviesList", JSON.stringify(listWithDelete));
-        console.log('listWithDelete', listWithDelete)
         setSavedMovies([...listWithDelete])
       })
       .catch((err) => console.log(err))
