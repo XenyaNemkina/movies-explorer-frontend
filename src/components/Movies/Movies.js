@@ -24,8 +24,8 @@ useEffect(() => {
 
 
   useEffect(() => {
-    if (localStorage.getItem('smallMeterAll')) {
-      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeterAll')))
+    if (localStorage.getItem('smallMeter')) {
+      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeter')))
     }
     if (typeof localStorage.getItem('valueInput') !== undefined) {
       findMovies(undefined, localStorage.getItem('valueInput'))

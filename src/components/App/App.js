@@ -199,6 +199,7 @@ function setTextMovies(text) {
 
     if (!value) {
       setMoviesToRender(allMovies)
+      localStorage.setItem("valueInput", '');
       return;
     }
   
@@ -211,44 +212,35 @@ function setTextMovies(text) {
       setMoviesToRender([]);
     } else {
       const isSmallMeter = localStorage.getItem("smallMeter");
-      if (isSmallMeter === "false") {
-          setText("");
-          localStorage.setItem("numberOfMoviesDisplayed", "0");
-          refresh();
-        } else {
-          setText("");
-          list = list.filter((el) => el.duration < 40);
-          localStorage.setItem("valueInput", value);
-          localStorage.setItem("numberOfMoviesDisplayed", "0");
-          refresh();
-        }
-        setMoviesToRender(list);
+
+      // if (isSmallMeter !== null) {
+      //   if (isSmallMeter === "false") {
+      //     setText("");
+      //     localStorage.setItem("numberOfMoviesDisplayed", "0");
+      //     refresh();
+      //   } else {
+      //     setText("");
+      //     list = list.filter((el) => el.duration < 40);
+      //     localStorage.setItem("valueInput", value);
+      //     localStorage.setItem("numberOfMoviesDisplayed", "0");
+      //     refresh();
+      //   }
+      // }
+      setMoviesToRender(list);
       }
+      
 
       setIsLoaderActive(false);
   }
   
 
   async function findSavedMovies(evt, value) {
-    evt.preventDefault();
+    evt?.preventDefault();
     value = value.toLowerCase();
     localStorage.setItem("valueInputSavedMovies", value);
     const saveMovies = JSON.parse(localStorage.getItem("savedMoviesList"));
-    const isSmallMeter = localStorage.getItem("smallMeter");
+    const isSmallMeter = localStorage.getItem("smallMeterShort");
     let list = saveMovies.filter((el) => el.nameRU.toLowerCase().includes(value));
-
-    if (isSmallMeter === "false") {
-      setText("");
-      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(list));
-    } else {
-      setText("");
-      list = saveMovies.filter((el) => el.duration < 40);
-      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(list));
-    }
-    if (saveMovies.length === 0 || list.length === 0) {
-      setText("Ничего не найдено.");
-      localStorage.setItem("SavedMovieslistMatchInput", JSON.stringify(0));
-    }
 
     setSavedMovies(list)
     refresh()

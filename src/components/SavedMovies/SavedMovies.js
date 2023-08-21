@@ -26,6 +26,8 @@ function SavedMovies({ savedMovies, findMovies, saveMovie, deleteMovie, text }) 
     if (localStorage.getItem('smallMeterSaved')) {
       setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeterSaved')))
     }
+
+    findMovies(undefined, '');
   }, [])
 
   return (
