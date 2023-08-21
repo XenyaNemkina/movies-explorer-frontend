@@ -1,0 +1,16 @@
+.moviesCard__btn_delete {
+  width: 100px;
+  height: 29px;
+  margin: 14px;
+  background-color: #f9f9f9;
+  border-radius: 30px;
+  border: none;
+  background-image: url(../../images/deletebtn.png);
+  background-position: center;
+}
+
+@media screen and (max-width: 500px) {
+  .moviesCard__btn {
+    margin: 9px 0;
+  }
+}

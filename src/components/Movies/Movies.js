@@ -1,12 +1,53 @@
+import React, {useState, useEffect} from "react";
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import movieData from "../../utils/movieData";
 
-function Movies() {
+function Movies({ savedMovies, findMovies, saveMovie, deleteMovie, text, movies }) {
+  const [filteredMovies, setFilteredMovies] = useState(movies);
+  const [isSmallMetr, setIsSmallMetr] = useState(false);
+
+  const handleSmallMetrCheckbox = () => {
+    setIsSmallMetr(value => !value);
+}
+
+useEffect(() => {
+  if (movies) {
+    let filteredList = [];
+    if (isSmallMetr) {
+      filteredList = movies?.filter((el) => el.duration < 40);
+    } else {
+      filteredList = movies;
+    }
+    setFilteredMovies([...filteredList]);
+  }
+}, [isSmallMetr, movies])
+
+
+  useEffect(() => {
+    if (localStorage.getItem('smallMeter')) {
+      setIsSmallMetr(JSON.parse(localStorage.getItem('smallMeter')))
+    }
+    if (typeof localStorage.getItem('valueInput') !== undefined) {
+      findMovies(undefined, localStorage.getItem('valueInput'))
+    }
+  }, [])
+
   return (
     <main className="movies">
-      <SearchForm />
-      <MoviesCardList movies={movieData} />
+      <SearchForm 
+        findMovies={findMovies} 
+        handleSmallMetr={handleSmallMetrCheckbox}
+        toggleSmallMeter={isSmallMetr}
+        text={text} 
+        type={'all'}
+      />
+      <MoviesCardList
+        savedMovies={savedMovies}
+        movies={filteredMovies}
+        isSaved={false}
+        saveMovie={saveMovie}
+        deleteMovie={deleteMovie} 
+      />
     </main>
   );
 }

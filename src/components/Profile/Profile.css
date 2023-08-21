@@ -32,6 +32,11 @@
   margin: 17px 0 0;
 }
 
+.profile__fieldset {
+  display: flex;
+  flex-direction: column;
+}
+
 .profile__field {
   height: 14px;
   font-size: 11px;
@@ -49,12 +54,12 @@
 }
 
 .profile__field::placeholder {
-  color: black;
+  color: #AAA;
 }
 
 .profile__field_error {
   display: block;
-  margin-top: 189px;
+  margin-top: 4px;
   min-height: 11px;
 }
 
@@ -64,7 +69,17 @@
   font-family: "Inter", Arial, sans-serif;
   font-size: 11px;
   font-weight: 400;
-  margin-top: 189px;
+}
+
+.profile__submit_error {
+  margin-top: 114px;
+  min-height: 11px;
+  display: block;
+  color: #ff004c;
+  text-align: center;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .profile__content:first-child {
@@ -73,7 +88,7 @@
 }
 
 .profile__btn {
-  margin: 220px 0 0;
+  margin: 20px 0 0;
   border: none;
   background-color: transparent;
   font-size: 13px;
@@ -81,27 +96,24 @@
   color: black;
 }
 
-.profile_savebtn_active {
-  width: 100%;
-  height: 45px;
+.profile_savebtn {
   border-radius: 3px;
   background-color: #000;
-  font-size: 14px;
-  font-weight: 500;
   color: #fff;
-  margin: 134px 0 16px;
-}
-
-.profile_savebtn {
-  background-color: #f8f8f8;
-  color: #c2c2c2;
   width: 100%;
   height: 45px;
   border-radius: 3px;
-  border: 1px solid #f8f8f8;
   font-size: 14px;
   font-weight: 500;
   margin: 20px 0 16px;
+}
+
+.profile_savebtn_disabled {
+
+  border: 1px solid #e8e8e8;
+  background-color: #e8e8e8;
+  color: #aaa;
+  pointer-events: none;
 }
 
 .profile__signoutbtn {

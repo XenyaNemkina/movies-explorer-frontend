@@ -3,7 +3,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  max-width: 1140px;
+  max-width: 100%;
   height: 74px;
   padding: 18px 70px 0;
 }
